@@ -73,5 +73,19 @@ namespace BankApp
             }
             return false; // Returnerar false vid ogiltigt personnummer
         }
+
+        // Metod för att hämta en användare baserat på personnummer
+        public User? GetUserByPersonalNumber(string personalNumber)
+        {
+            try
+            {
+                return usersCollection.Find(u => u.PersonalNumber == personalNumber).FirstOrDefault(); // Hämtar användaren från databasen
+            }
+            catch (MongoException ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid hämtning av användaren: {ex.Message}");
+                return null; // Returnerar null om något går fel
+            }
+        }
     }
 }
