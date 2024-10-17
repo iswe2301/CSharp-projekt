@@ -36,7 +36,7 @@ namespace BankApp
                 {
                     case "1":
                         // Anropar metod för att registrera ny användare
-                        user = RegisterNewUser(userService); 
+                        user = RegisterNewUser(userService);
                         // Kontrollerar om användaren registrerades
                         if (user != null)
                         {
@@ -63,6 +63,41 @@ namespace BankApp
                         System.Threading.Thread.Sleep(2000); // Väntar 2 sekunder så att användaren hinner läsa meddelandet
                         break;
                 }
+            }
+        }
+
+        // Metod för att registrera ny användare
+        static User? RegisterNewUser(UserService userService)
+        {
+            // Försöker registrera en ny användare
+            try
+            {
+                Console.Clear(); // Rensar konsolen
+                Console.WriteLine("ISA Banken - Registrering");
+
+                // Frågar användaren om personuppgifter för att registrera en ny användare
+                string personalNumber = InputValidation.GetValidPersonalNumber(userService); // Anropar metod för att hämta giltigt personnummer
+                string firstName = InputValidation.GetValidInput("Ange ditt förnamn: "); // Hämtar förnamn
+                string lastName = InputValidation.GetValidInput("Ange ditt efternamn: "); // Hämtar efternamn
+                string password = InputValidation.GetValidPassword(true); // Anropar metod för att hämta giltigt lösenord
+
+                // Registrerar användaren i databasen 
+                var user = userService.RegisterNewUser(personalNumber, firstName, lastName, password);
+
+                // Kontrollerar om användaren redan finns
+                if (user == null)
+                {
+                    Console.WriteLine("Fel: Du har redan ett befintligt kundkonto. Välj att logga in istället.");
+                    Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                    Console.ReadKey(); // Väntar på att användaren trycker på en knapp innan huvudmenyn visas igen
+                }
+                return user; // Returnerar den nya användaren om registreringen lyckades
+            }
+            // Fångar upp eventuella fel vid registrering
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ett fel uppstod vid registreringen: {ex.Message}");
+                return null; // Returnerar null om registreringen misslyckades
             }
         }
     }
