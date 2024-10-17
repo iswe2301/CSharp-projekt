@@ -174,5 +174,37 @@ namespace BankApp
                 Console.ReadKey();
             }
         }
+
+        // Metod för att visa alla kundens konton
+        private void ShowAccounts(AccountService accountService, string personalNumber)
+        {
+            try
+            {
+                Console.Clear(); // Rensar konsolen
+                Console.WriteLine("ISA Banken - Mina konton");
+
+                // Hämtar alla användarens konton baserat på personnumret
+                var accounts = accountService.GetAccountsByUser(personalNumber);
+
+                // Kontrollerar om användaren har några konton, annars avslutas metoden
+                if (!accounts.Any()) return;
+
+                // Loopar igenom användarens konton och skriver ut dem
+                foreach (var account in accounts)
+                {
+                    Console.WriteLine($"{account.AccountType} - {account.AccountNumber} (Saldo: {account.Balance:C})");
+                }
+
+                // Väntar på att användaren trycker på en knapp innan den återgår till huvudmenyn
+                Console.WriteLine("\nTryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+            catch (Exception ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid visning av konton: {ex.Message}");
+                Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+        }
     }
 }
