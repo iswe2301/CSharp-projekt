@@ -28,5 +28,19 @@ namespace BankApp
                 throw;
             }
         }
+
+        // Metod för att hämta alla transaktioner för ett specifikt konto
+        public List<Transaction> GetTransactionsByAccount(string accountNumber)
+        {
+            try
+            {
+                return transactionsCollection.Find(t => t.AccountNumber == accountNumber).ToList(); // Hämtar transaktioner baserat på kontonummer, returnerar en lista
+            }
+            catch (MongoException ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid hämtning av transaktioner: {ex.Message}");
+                return new List<Transaction>(); // Returnerar en tom lista om något går fel
+            }
+        }
     }
 }
