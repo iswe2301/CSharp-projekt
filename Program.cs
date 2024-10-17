@@ -100,5 +100,50 @@ namespace BankApp
                 return null; // Returnerar null om registreringen misslyckades
             }
         }
+
+        // Metod för att logga in befintlig användare
+        static User? LoginUser(AuthService authService, UserService userService)
+        {
+            // Försöker logga in användaren
+            try
+            {
+                Console.Clear(); // Rensar konsolen
+                Console.WriteLine("ISA Banken - Logga in");
+
+                // Anropar metod för att hämta giltigt personnummer
+                string personalNumber = InputValidation.GetValidPersonalNumber(userService);
+                AuthService.LoginStatus loginStatus; // Variabel för att lagra inloggningsstatus
+                User? user = null; // Variabel för att lagra inloggad användare
+
+                // Loopar tills användaren loggar in
+                do
+                {
+                    string passwordInput = InputValidation.GetValidPassword(false); // Anropar metod för att hämta giltigt lösenord, kontrollerar inte längd
+                    (loginStatus, user) = authService.LoginUser(personalNumber, passwordInput); // Försöker logga in användaren
+
+                    // Kontrollerar inloggningsstatus
+                    if (loginStatus == AuthService.LoginStatus.UserNotFound)
+                    {
+                        Console.WriteLine("Inget kundkonto hittades. Välj att registrera dig istället.");
+                        Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                        Console.ReadKey(); // Väntar på knapptryckning
+                        return null; // Returnerar null om ingen användare hittas
+                    }
+                    else if (loginStatus == AuthService.LoginStatus.WrongPassword)
+                    {
+                        Console.WriteLine("Fel lösenord. Försök igen.");
+                    }
+
+                } while (loginStatus != AuthService.LoginStatus.Success); // Fortsätter tills inloggningen lyckas
+
+                return user; // Returnerar inloggad användare
+            }
+            // Fångar upp eventuella fel vid inloggning
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ett fel uppstod vid inloggningen: {ex.Message}");
+                return null; // Returnerar null om inloggningen misslyckades
+            }
+        }
     }
 }
