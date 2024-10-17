@@ -115,5 +115,25 @@ namespace BankApp
             }
             return accountType; // Returnerar kontotypen
         }
+
+        // Metod för att hämta giltigt startbelopp
+        public static decimal GetInitialBalance()
+        {
+            decimal initialBalance = 0; // Variabel för att lagra startbeloppet, sätts initalt till 0
+
+            // Loopar tills användaren har angett ett giltigt startbelopp (minst 100 kr)
+            while (initialBalance < 100)
+            {
+                Console.Write("Ange startbelopp (minst 100 kr): ");
+                string? balanceInput = Console.ReadLine();
+
+                // Kontrollerar att beloppet är giltigt och minst 100 kr
+                if (string.IsNullOrWhiteSpace(balanceInput) || !decimal.TryParse(balanceInput, out initialBalance) || initialBalance < 100)
+                {
+                    Console.WriteLine("Fel: Startbeloppet måste vara minst 100 kr. Försök igen."); // Felmeddelande om beloppet är ogiltigt
+                }
+            }
+            return initialBalance; // Returnerar startbeloppet
+        }
     }
 }
