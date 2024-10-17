@@ -75,5 +75,28 @@ namespace BankApp
                 return false; // Returnerar false om något går fel
             }
         }
+
+        // Metod för att göra ett uttag från ett konto (uppdatera befintligt saldo i db)
+        public bool Withdraw(string accountNumber, decimal amount)
+        {
+            try
+            {
+                var account = accountsCollection.Find(a => a.AccountNumber == accountNumber).FirstOrDefault(); // Hämtar kontot från databasen
+
+                // Kontrollerar om kontot finns och om det finns tillräckligt med pengar på kontot
+                if (account != null && account.Balance >= amount)
+                {
+                    account.Balance -= amount; // Drar av beloppet från kontots saldo
+                    accountsCollection.ReplaceOne(a => a.AccountNumber == accountNumber, account); // Uppdaterar kontot i databasen
+                    return true; // Returnerar true när uttaget lyckades
+                }
+                return false; // Returnerar false om kontot inte hittades eller om det inte fanns tillräckligt med pengar
+            }
+            catch (MongoException ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid uttaget: {ex.Message}");
+                return false; // Returnerar false om något går fel
+            }
+        }
     }
 }
