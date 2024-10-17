@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using System.Text.RegularExpressions; // Används för att kontrollera personnummer
 
 namespace BankApp
 {
@@ -35,6 +36,42 @@ namespace BankApp
                 Console.WriteLine($"Ett fel uppstod vid registreringen av användaren: {ex.Message}");
                 return null; // Returnerar null om något går fel
             }
+        }
+
+        // Metod för att kontrollera att personnumret är giltigt
+        public bool IsValidPersonalNumber(string? personalNumber)
+        {
+            // Kontrollerar att personnumret inte är tomt
+            if (string.IsNullOrEmpty(personalNumber))
+            {
+                return false;
+            }
+
+            // Kontrollerar att personnumret är 12 tecken långt och endast innehåller siffror
+            if (!Regex.IsMatch(personalNumber, @"^\d{12}$"))
+            {
+                return false;
+            }
+
+            // Delar upp personnumret i år, månad och dag
+            string year = personalNumber.Substring(0, 4);
+            string month = personalNumber.Substring(4, 2);
+            string day = personalNumber.Substring(6, 2);
+
+            // Kontrollerar att datumet är giltigt
+            if (int.TryParse(year, out int yearNum) && int.TryParse(month, out int monthNum) && int.TryParse(day, out int dayNum))
+            {
+                try
+                {
+                    DateTime date = new DateTime(yearNum, monthNum, dayNum); // Skapar ett nytt datumobjekt
+                    return date <= DateTime.Today; // Returnerar true om datumet är mindre än eller lika med dagens datum
+                }
+                catch
+                {
+                    return false; // Returnerar false om datumet är ogiltigt
+                }
+            }
+            return false; // Returnerar false vid ogiltigt personnummer
         }
     }
 }
