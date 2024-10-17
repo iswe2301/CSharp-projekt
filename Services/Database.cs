@@ -24,5 +24,19 @@ namespace BankApp
                 throw;
             }
         }
+
+        // Metod för att hämta användare från databasen
+        public IMongoCollection<User> GetUsersCollection()
+        {
+            try
+            {
+                return db.GetCollection<User>("Users"); // Returnerar användarkollektionen
+            }
+            catch (MongoException ex)
+            {
+                Console.WriteLine($"Fel vid hämtning av användarkollektionen: {ex.Message}");
+                throw;
+            }
+        }
     }
 }
