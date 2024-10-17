@@ -95,5 +95,25 @@ namespace BankApp
                 }
             }
         }
+
+        // Metod för att hantera gitlig input av kontotyp, får ej vara tomt
+        public static string GetAccountType()
+        {
+            string? accountType = null; // Variabel för att lagra kontotypen
+
+            // Loopar tills användaren har angett en giltig kontotyp (inte tom)
+            while (string.IsNullOrWhiteSpace(accountType))
+            {
+                Console.Write("\nAnge kontotyp (t.ex. Sparkonto, Lönekonto): ");
+                accountType = Console.ReadLine();
+
+                // Kontrllerar om kontotypen är tom
+                if (string.IsNullOrWhiteSpace(accountType))
+                {
+                    Console.WriteLine("Fel: Kontotyp kan inte vara tom. Försök igen."); // Skriver ut felmeddelande
+                }
+            }
+            return accountType; // Returnerar kontotypen
+        }
     }
 }
