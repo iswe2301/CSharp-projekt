@@ -38,5 +38,19 @@ namespace BankApp
                 throw;
             }
         }
+
+        // Metod för att hämta konton från databasen
+        public IMongoCollection<Account> GetAccountsCollection()
+        {
+            try
+            {
+                return db.GetCollection<Account>("Accounts"); // Returnerar kontokollektionen
+            }
+            catch (MongoException ex)
+            {
+                Console.WriteLine($"Fel vid hämtning av kontokollektionen: {ex.Message}");
+                throw;
+            }
+        }
     }
 }
