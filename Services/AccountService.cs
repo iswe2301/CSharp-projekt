@@ -98,5 +98,13 @@ namespace BankApp
                 return false; // Returnerar false om något går fel
             }
         }
+
+        // Metod för att skapa ett slumpmässigt kontonummer
+        public string GenerateAccountNumber()
+        {
+            Random random = new Random(); // Skapar en instans av Random
+            int randomNumber = random.Next(10000000, 99999999); // Slumpar ett nummer mellan 10000000 och 99999999, totalt 8 siffror
+            return $"2034-{randomNumber}"; // Kombinerar clearingnummer med det slumpmässiga numret och returnerar
+        }
     }
 }
