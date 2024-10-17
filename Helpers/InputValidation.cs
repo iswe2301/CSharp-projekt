@@ -29,5 +29,48 @@ namespace BankApp
                 Console.WriteLine("Fel: Fältet får inte vara tomt."); // Felmeddelande om input är tom
             }
         }
+
+        // Metod för att kontrollera giltigt lösenord, får ej vara tomt och minst 5 tecken långt
+        public static string GetValidPassword(bool checkLength)
+        {
+            while (true)
+            {
+                Console.Write("Ange ditt lösenord: ");
+                string password = HidePassword(); // Anropar metod för att dölja lösenordet
+                // Kontrollerar att lösenordet inte är tomt och att det är minst 5 tecken långt (om checkLength är true)
+                if (!checkLength || password.Length >= 5)
+                    return password; // Returnerar giltigt lösenord
+                Console.WriteLine("Fel: Lösenordet måste vara minst 5 tecken långt."); // Felmeddelande om lösenordet är för kort
+            }
+        }
+
+        // Metod för att dölja lösenord som skrivs in
+        public static string HidePassword()
+        {
+            var password = string.Empty; // Tom sträng för att lagra lösenordet
+
+            // Loop för att läsa in lösenordet tecken för tecken
+            while (true)
+            {
+                var keyInfo = Console.ReadKey(intercept: true); // Läser in tangenttryck utan att visa det
+                if (keyInfo.Key == ConsoleKey.Enter)
+                    break; // Avslutar loopen när användaren trycker Enter
+
+                // Kontrollerar om användaren trycker på backspace och att lösenordet inte är tomt
+                if (keyInfo.Key == ConsoleKey.Backspace && password.Length > 0)
+                {
+                    password = password.Substring(0, password.Length - 1); // Tar bort sista tecknet från lösenordet
+                    Console.Write("\b \b"); // Flyttar markören bakåt, skriver över tecknet med ett mellanslag och flyttar markören bakåt igen
+                }
+                // Kontrollerar att tecknet inte är ett kontrolltecken
+                else if (!char.IsControl(keyInfo.KeyChar))
+                {
+                    password += keyInfo.KeyChar; // Lägger till tecknet i lösenordet
+                    Console.Write("*"); // Visar en * istället för tecknet
+                }
+            }
+            Console.WriteLine(); // Skapar en ny rad efter lösenordet skrivits in
+            return password; // Returnerar det dolda lösenordet
+        }
     }
 }
