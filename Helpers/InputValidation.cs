@@ -72,5 +72,28 @@ namespace BankApp
             Console.WriteLine(); // Skapar en ny rad efter lösenordet skrivits in
             return password; // Returnerar det dolda lösenordet
         }
+
+        // Metod för att validera och hämta ett giltigt belopp
+        public static decimal GetValidAmount(string prompt, decimal minimumAmount)
+        {
+            decimal amount; // Variabel för att lagra beloppet
+
+            // Loopar tills användaren matat in ett giltigt belopp
+            while (true)
+            {
+                Console.Write(prompt); // Skriver ut prompten
+                string? amountInput = Console.ReadLine();
+
+                // Kontrollerar att beloppet är giltigt och minst minimunbeloppet som skickats in
+                if (decimal.TryParse(amountInput, out amount) && amount >= minimumAmount)
+                {
+                    return amount; // Returnerar det giltiga beloppet
+                }
+                else
+                {
+                    Console.WriteLine($"Fel: Beloppet måste vara minst {minimumAmount:C}. Försök igen."); // Felmeddelande om beloppet är ogiltigt
+                }
+            }
+        }
     }
 }
