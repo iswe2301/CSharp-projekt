@@ -52,5 +52,19 @@ namespace BankApp
                 throw;
             }
         }
+
+        // Metod för att hämta transaktioner från databasen
+        public IMongoCollection<Transaction> GetTransactionsCollection()
+        {
+            try
+            {
+                return db.GetCollection<Transaction>("Transactions"); // Returnerar transaktionskollektionen
+            }
+            catch (MongoException ex)
+            {
+                Console.WriteLine($"Fel vid hämtning av transaktionskollektionen: {ex.Message}");
+                throw;
+            }
+        }
     }
 }
