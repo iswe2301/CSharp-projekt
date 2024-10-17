@@ -57,5 +57,33 @@ namespace BankApp
             Console.WriteLine("6. Logga ut");
             Console.Write("\nVälj ett alternativ (1-6): ");
         }
+
+        // Metod för att skapa nytt konto
+        private void CreateNewAccount(AccountService accountService, TransactionService transactionService, string personalNumber)
+        {
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("ISA Banken - Skapa konto");
+
+                string accountType = InputValidation.GetAccountType(); // Hämtar kontotyp
+                decimal initialBalance = InputValidation.GetInitialBalance(); // Hämtar startbelopp
+
+                string accountNumber = accountService.GenerateAccountNumber(); // Genererar ett nytt kontonummer
+                var account = accountService.CreateAccount(accountNumber, personalNumber, accountType, initialBalance); // Skapar ett nytt konto i databasen
+
+                transactionService.AddTransaction(accountNumber, "Insättning vid kontoskapande", initialBalance); // Skapar en transaktion för insättningen
+
+                Console.WriteLine($"{accountType} skapat med kontonummer {account.AccountNumber} och startbelopp {account.Balance:C}."); // Skriver ut bekräftelse
+                Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+            catch (Exception ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid skapandet av kontot: {ex.Message}");
+                Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+        }
     }
 }
