@@ -52,5 +52,28 @@ namespace BankApp
                 return new List<Account>(); // Returnerar en tom lista om något går fel
             }
         }
+
+        // Metod för att sätta in pengar på ett konto (uppdatera befintligt saldo i db)
+        public bool Deposit(string accountNumber, decimal amount)
+        {
+            try
+            {
+                var account = accountsCollection.Find(a => a.AccountNumber == accountNumber).FirstOrDefault(); // Hämtar kontot från databasen
+
+                // Kontrollerar om kontot finns
+                if (account != null)
+                {
+                    account.Balance += amount; // Lägger till insättningen på kontot
+                    accountsCollection.ReplaceOne(a => a.AccountNumber == accountNumber, account); // Uppdaterar kontot i databasen
+                    return true; // Returnerar true när insättningen lyckades
+                }
+                return false; // Returnerar false om kontot inte hittades
+            }
+            catch (MongoException ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid insättningen: {ex.Message}");
+                return false; // Returnerar false om något går fel
+            }
+        }
     }
 }
