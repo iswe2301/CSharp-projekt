@@ -38,5 +38,19 @@ namespace BankApp
                 throw;
             }
         }
+
+        // Metod för att hämta kunds konton baserat på kontonummer
+        public List<Account> GetAccountsByUser(string personalNumber)
+        {
+            try
+            {
+                return accountsCollection.Find(a => a.OwnerPersonalNumber == personalNumber).ToList(); // Hämtar konton baserat på personnummer, returnerar en lista
+            }
+            catch (MongoException ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid hämtning av konton: {ex.Message}");
+                return new List<Account>(); // Returnerar en tom lista om något går fel
+            }
+        }
     }
 }
