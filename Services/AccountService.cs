@@ -44,7 +44,17 @@ namespace BankApp
         {
             try
             {
-                return accountsCollection.Find(a => a.OwnerPersonalNumber == personalNumber).ToList(); // Hämtar konton baserat på personnummer, returnerar en lista
+                var accounts = accountsCollection.Find(a => a.OwnerPersonalNumber == personalNumber).ToList(); // Hämtar konton baserat på personnummer, returnerar en lista
+
+                // Kontrollerar om inga konton finns och skriver ut meddelande
+                if (accounts == null || !accounts.Any())
+                {
+                    Console.WriteLine("\nDu har inga befintliga konton.");
+                    Console.WriteLine("\nTryck på valfri knapp för att återgå till huvudmenyn...");
+                    Console.ReadKey();
+                    return new List<Account>(); // Returnerar en tom lista om inga konton finns
+                }
+                    return accounts; // Returnerar listan med konton
             }
             catch (MongoException ex) // Fångar upp eventuella fel
             {
