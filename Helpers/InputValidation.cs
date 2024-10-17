@@ -15,5 +15,19 @@ namespace BankApp
                 Console.WriteLine("Fel: Ange giltigt personnummer.");
             }
         }
+
+        // Metod för att hantera giltig input för förnamn/efternamn, får ej vara tomt
+        public static string GetValidInput(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt); // Visar prompten
+                string input = Console.ReadLine()?.Trim() ?? ""; // Läser in och trimmar input, om input är null sätts den till en tom sträng
+                // Kontrollerar att input inte är tom
+                if (!string.IsNullOrWhiteSpace(input))
+                    return input; // Returnerar giltig input
+                Console.WriteLine("Fel: Fältet får inte vara tomt."); // Felmeddelande om input är tom
+            }
+        }
     }
 }
