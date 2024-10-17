@@ -122,5 +122,57 @@ namespace BankApp
                 Console.ReadKey();
             }
         }
+
+        // Metod för att ta ut pengar från ett konto
+        private void WithdrawMoney(AccountService accountService, TransactionService transactionService, string personalNumber)
+        {
+            try
+            {
+                Console.Clear(); // Rensar konsolen
+                Console.WriteLine("ISA Banken - Uttag");
+
+                // Hämtar alla användarens konton baserat på personnumret
+                var accounts = accountService.GetAccountsByUser(personalNumber);
+
+                // Kontrollerar om användaren har några konton, annars avslutas metoden
+                if (!accounts.Any()) return;
+
+                // Anropar metod för att välja konto
+                var selectedAccount = accountService.SelectAccount(accounts, "Välj vilket konto du vill ta ut pengar från (ange siffra): ");
+
+                decimal amount; // Variabel för att lagra beloppet
+
+                while (true) // Loopar tills ett giltigt belopp anges
+                {
+                    // Anropar metod för att validera och få giltigt belopp
+                    amount = InputValidation.GetValidAmount("Ange belopp att ta ut (minst 100 kr): ", 100);
+
+                    // Kontrollerar om beloppet är högre än kontots saldo
+                    if (selectedAccount.Balance >= amount)
+                    {
+                        // Kontrollerar om uttaget lyckades genomföras i databasen
+                        if (accountService.Withdraw(selectedAccount.AccountNumber!, amount))
+                        {
+                            selectedAccount.Balance -= amount; // Uppdaterar saldot
+                            transactionService.AddTransaction(selectedAccount.AccountNumber!, "Uttag", amount); // Lägger till transaktionen i databasen
+                            Console.WriteLine($"Uttag av {amount:C} lyckades. Nytt saldo för {selectedAccount.AccountType}: {selectedAccount.Balance:C}");
+                            break; // Bryter ut ur loopen efter lyckad transaktion
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Fel: Otillräckligt saldo. Försök igen.");
+                    }
+                }
+                Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+            catch (Exception ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid uttaget: {ex.Message}");
+                Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+        }
     }
 }
