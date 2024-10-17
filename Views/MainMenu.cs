@@ -206,5 +206,54 @@ namespace BankApp
                 Console.ReadKey();
             }
         }
+
+        // Metod för att visa transaktioner för ett specifikt konto
+        private void ShowTransactions(AccountService accountService, TransactionService transactionService, string personalNumber)
+        {
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("ISA Banken - Transaktioner");
+
+                // Hämta alla konton för användaren baserat på personnumret
+                var accounts = accountService.GetAccountsByUser(personalNumber);
+
+                // Kontrollerar om användaren har några konton, annars avslutas metoden
+                if (!accounts.Any()) return;
+
+                // Anropar metod för att välja konto
+                var selectedAccount = accountService.SelectAccount(accounts, "Välj ett konto för att visa transaktioner (ange siffra): ");
+
+                // Hämtar transaktioner för valt konto
+                var transactions = transactionService.GetTransactionsByAccount(selectedAccount.AccountNumber!);
+
+                // Kontrollerar om det finns transaktioner för kontot
+                if (transactions == null || !transactions.Any())
+                {
+                    Console.WriteLine($"\nInga transaktioner tillgängliga för {selectedAccount.AccountType} med kontonummer {selectedAccount.AccountNumber}");
+                }
+                else
+                {
+                    Console.Clear(); // Rensar konsolen
+                    Console.WriteLine($"\nTransaktioner för {selectedAccount.AccountType} med kontonummer {selectedAccount.AccountNumber}");
+                    Console.WriteLine();
+
+                    // Loopar igenom transaktionerna och skriver ut dem
+                    foreach (var transaction in transactions)
+                    {
+                        Console.WriteLine($"{transaction.Date} - {transaction.TransactionType}: {transaction.Amount:C}");
+                    }
+                }
+
+                Console.WriteLine("\nTryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+            catch (Exception ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid visning av transaktioner: {ex.Message}");
+                Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+        }
     }
 }
