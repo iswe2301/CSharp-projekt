@@ -85,5 +85,42 @@ namespace BankApp
                 Console.ReadKey();
             }
         }
+
+        // Metod för att sätta in pengar på ett konto
+        private void DepositMoney(AccountService accountService, TransactionService transactionService, string personalNumber)
+        {
+            try
+            {
+                Console.Clear(); // Rensar konsolen
+                Console.WriteLine("ISA Banken - Insättning");
+
+                // Hämtar alla användarens konton baserat på personnumret
+                var accounts = accountService.GetAccountsByUser(personalNumber);
+
+                // Kontrollerar om användaren har några konton, annars avslutas metoden
+                if (!accounts.Any()) return;
+
+                // Anropar metod för att välja konto
+                var selectedAccount = accountService.SelectAccount(accounts, "Välj vilket konto du vill sätta in pengar på (ange siffra): ");
+
+                // Anropar metod för att validera och få giltigt belopp
+                decimal amount = InputValidation.GetValidAmount("Ange belopp att sätta in (minst 100 kr): ", 100);
+
+                // Kontrollerar om insättningen lyckades i databasen
+                if (accountService.Deposit(selectedAccount.AccountNumber!, amount))
+                {
+                    transactionService.AddTransaction(selectedAccount.AccountNumber!, "Insättning", amount); // Lägger till transaktionen i databasen
+                    Console.WriteLine($"Insättning lyckades. Nytt saldo för {selectedAccount.AccountType}: {selectedAccount.Balance + amount:C}"); // Skriver ut bekräftelse
+                    Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                    Console.ReadKey();
+                }
+            }
+            catch (Exception ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid insättningen: {ex.Message}");
+                Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+        }
     }
 }
