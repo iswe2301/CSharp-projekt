@@ -76,10 +76,17 @@ namespace BankApp
                 Console.WriteLine("ISA Banken - Registrering");
 
                 // Frågar användaren om personuppgifter för att registrera en ny användare
-                string personalNumber = InputValidation.GetValidPersonalNumber(userService); // Anropar metod för att hämta giltigt personnummer
-                string firstName = InputValidation.GetValidInput("Ange ditt förnamn: "); // Hämtar förnamn
-                string lastName = InputValidation.GetValidInput("Ange ditt efternamn: "); // Hämtar efternamn
-                string password = InputValidation.GetValidPassword(true); // Anropar metod för att hämta giltigt lösenord
+                string? personalNumber = InputValidation.GetValidPersonalNumber(userService); // Anropar metod för att hämta giltigt personnummer
+                if (personalNumber == null) return null; // Återgår om användaren tryckte på X
+
+                string? firstName = InputValidation.GetValidInput("Ange ditt förnamn"); // Hämtar förnamn
+                if (firstName == null) return null; // Återgår om användaren tryckte på X
+
+                string? lastName = InputValidation.GetValidInput("Ange ditt efternamn"); // Hämtar efternamn
+                if (lastName == null) return null; // Återgår om användaren tryckte på X
+
+                string? password = InputValidation.GetValidPassword(true); // Anropar metod för att hämta giltigt lösenord
+                if (password == null) return null; // Återgår om användaren tryckte på X
 
                 // Registrerar användaren i databasen 
                 var user = userService.RegisterNewUser(personalNumber, firstName, lastName, password);
@@ -111,14 +118,18 @@ namespace BankApp
                 Console.WriteLine("ISA Banken - Logga in");
 
                 // Anropar metod för att hämta giltigt personnummer
-                string personalNumber = InputValidation.GetValidPersonalNumber(userService);
+                string? personalNumber = InputValidation.GetValidPersonalNumber(userService);
+                if (personalNumber == null) return null; // Återgår till huvudmenyn om användaren trycker på X
+
                 AuthService.LoginStatus loginStatus; // Variabel för att lagra inloggningsstatus
                 User? user = null; // Variabel för att lagra inloggad användare
 
                 // Loopar tills användaren loggar in
                 do
                 {
-                    string passwordInput = InputValidation.GetValidPassword(false); // Anropar metod för att hämta giltigt lösenord, kontrollerar inte längd
+                    string? passwordInput = InputValidation.GetValidPassword(false); // Anropar metod för att hämta giltigt lösenord, kontrollerar inte längd
+                    if (passwordInput == null) return null; // Återgår till huvudmenyn om användaren trycker på X
+
                     (loginStatus, user) = authService.LoginUser(personalNumber, passwordInput); // Försöker logga in användaren
 
                     // Kontrollerar inloggningsstatus

@@ -4,12 +4,16 @@ namespace BankApp
     public static class InputValidation
     {
         // Metod för att hämta ett giltigt personnummer
-        public static string GetValidPersonalNumber(UserService userService)
+        public static string? GetValidPersonalNumber(UserService userService)
         {
             while (true)
             {
-                Console.Write("Ange ditt personnummer (ÅÅÅÅMMDDXXXX): ");
-                string personalNumber = Console.ReadLine() ?? ""; // Läser in personnumret
+                Console.Write("Ange ditt personnummer (ÅÅÅÅMMDDXXXX) eller skriv 'X' för att avbryta: ");
+                string personalNumber = Console.ReadLine()?.Trim() ?? ""; // Läser in och trimmar input, om input är null sätts den till en tom sträng
+
+                // Kontrollerar om användaren vill avbryta
+                if (personalNumber.ToUpper() == "X") return null; // Returnerar null för att avbryta
+
                 if (userService.IsValidPersonalNumber(personalNumber)) // Validerar personnumret genom att anropa metoden i UserService
                     return personalNumber; // Returnerar personnumret om det är giltigt
                 Console.WriteLine("Fel: Ange giltigt personnummer.");
@@ -17,12 +21,16 @@ namespace BankApp
         }
 
         // Metod för att hantera giltig input för förnamn/efternamn, får ej vara tomt
-        public static string GetValidInput(string prompt)
+        public static string? GetValidInput(string prompt)
         {
             while (true)
             {
-                Console.Write(prompt); // Visar prompten
+                Console.Write($"{prompt} eller skriv 'X' för att avbryta: "); // Visar prompten
                 string input = Console.ReadLine()?.Trim() ?? ""; // Läser in och trimmar input, om input är null sätts den till en tom sträng
+
+                // Kontrollerar om användaren vill avbryta
+                if (input.ToUpper() == "X") return null; // Returnerar null för att avbryta
+
                 // Kontrollerar att input inte är tom
                 if (!string.IsNullOrWhiteSpace(input))
                     return input; // Returnerar giltig input
@@ -31,12 +39,17 @@ namespace BankApp
         }
 
         // Metod för att kontrollera giltigt lösenord, får ej vara tomt och minst 5 tecken långt
-        public static string GetValidPassword(bool checkLength)
+        public static string? GetValidPassword(bool checkLength)
         {
             while (true)
             {
-                Console.Write("Ange ditt lösenord: ");
-                string password = HidePassword(); // Anropar metod för att dölja lösenordet
+                Console.Write("Ange ditt lösenord eller skriv 'X' för att avbryta: ");
+
+                string? password = HidePassword(); // Anropar metod för att dölja lösenordet
+
+                // Kontrollerar om användaren vill avbryta
+                if (password == null) return null; // Returnerar null för att avbryta
+
                 // Kontrollerar att lösenordet inte är tomt och att det är minst 5 tecken långt (om checkLength är true)
                 if (!checkLength || password.Length >= 5)
                     return password; // Returnerar giltigt lösenord
@@ -45,7 +58,7 @@ namespace BankApp
         }
 
         // Metod för att dölja lösenord som skrivs in
-        public static string HidePassword()
+        public static string? HidePassword()
         {
             var password = string.Empty; // Tom sträng för att lagra lösenordet
 
@@ -53,8 +66,17 @@ namespace BankApp
             while (true)
             {
                 var keyInfo = Console.ReadKey(intercept: true); // Läser in tangenttryck utan att visa det
+
+                // Kontrollerar om användaren trycker på Enter
                 if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    // Kontrollerar om användaren vill avbryta
+                    if (password.ToUpper() == "X")
+                    {
+                        return null; // Returnerar null för att avbryta
+                    }
                     break; // Avslutar loopen när användaren trycker Enter
+                }
 
                 // Kontrollerar om användaren trycker på backspace och att lösenordet inte är tomt
                 if (keyInfo.Key == ConsoleKey.Backspace && password.Length > 0)
@@ -74,15 +96,18 @@ namespace BankApp
         }
 
         // Metod för att validera och hämta ett giltigt belopp
-        public static decimal GetValidAmount(string prompt, decimal minimumAmount)
+        public static decimal? GetValidAmount(string prompt, decimal minimumAmount)
         {
             decimal amount; // Variabel för att lagra beloppet
 
             // Loopar tills användaren matat in ett giltigt belopp
             while (true)
             {
-                Console.Write(prompt); // Skriver ut prompten
+                Console.Write($"{prompt} eller skriv 'X' för att avbryta: "); // Skriver ut prompten
                 string? amountInput = Console.ReadLine();
+
+                // Kontrollerar om användaren vill avbryta
+                if (amountInput?.ToUpper() == "X") return null; // Returnerar null för att avbryta
 
                 // Kontrollerar att beloppet är giltigt och minst minimunbeloppet som skickats in
                 if (decimal.TryParse(amountInput, out amount) && amount >= minimumAmount)
@@ -97,15 +122,19 @@ namespace BankApp
         }
 
         // Metod för att hantera gitlig input av kontotyp, får ej vara tomt
-        public static string GetAccountType()
+        public static string? GetAccountType()
         {
             string? accountType = null; // Variabel för att lagra kontotypen
 
             // Loopar tills användaren har angett en giltig kontotyp (inte tom)
             while (string.IsNullOrWhiteSpace(accountType))
             {
-                Console.Write("\nAnge kontotyp (t.ex. Sparkonto, Lönekonto): ");
+                Console.Write("\nAnge kontotyp (t.ex. Sparkonto, Lönekonto) eller skriv 'X' för att avbryta: ");
+
                 accountType = Console.ReadLine();
+
+                // Kontrollerar om användaren vill avbryta
+                if (accountType?.ToUpper() == "X") return null; // Returnerar null för att avbryta
 
                 // Kontrllerar om kontotypen är tom
                 if (string.IsNullOrWhiteSpace(accountType))
@@ -117,15 +146,19 @@ namespace BankApp
         }
 
         // Metod för att hämta giltigt startbelopp
-        public static decimal GetInitialBalance()
+        public static decimal? GetInitialBalance()
         {
             decimal initialBalance = 0; // Variabel för att lagra startbeloppet, sätts initalt till 0
 
             // Loopar tills användaren har angett ett giltigt startbelopp (minst 100 kr)
             while (initialBalance < 100)
             {
-                Console.Write("Ange startbelopp (minst 100 kr): ");
+                Console.Write("Ange startbelopp (minst 100 kr) eller skriv 'X' för att avbryta: ");
+
                 string? balanceInput = Console.ReadLine();
+
+                // Kontrollerar om användaren vill avbryta
+                if (balanceInput?.ToUpper() == "X") return null; // Returnerar null för att avbryta
 
                 // Kontrollerar att beloppet är giltigt och minst 100 kr
                 if (string.IsNullOrWhiteSpace(balanceInput) || !decimal.TryParse(balanceInput, out initialBalance) || initialBalance < 100)
@@ -134,6 +167,40 @@ namespace BankApp
                 }
             }
             return initialBalance; // Returnerar startbeloppet
+        }
+
+        // Metod för att välja ett specifikt konto från en lista
+        public static Account? SelectAccount(List<Account> accounts, string prompt)
+        {
+            Console.WriteLine("\nMina konton:");
+
+            // Loopar igenom användarens konton och skriver ut dem
+            for (int i = 0; i < accounts.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {accounts[i].AccountType} - {accounts[i].AccountNumber} (Saldo: {accounts[i].Balance:C})");
+            }
+
+            int selectedAccountIndex; // Variabel för att lagra det valda kontots index
+
+            // Loopar tills användaren valt ett giltigt konto
+            while (true)
+            {
+                Console.Write(prompt); // Skriver ut meddelandet som skickats in
+                string? selectedAccountIndexInput = Console.ReadLine(); // Läser in användarens val
+
+                // Kontrollerar om användaren vill avbryta
+                if (selectedAccountIndexInput?.ToUpper() == "X") return null; // Returnerar null om användaren väljer att avbryta
+
+                // Kontrollerar att användaren valt ett giltigt konto
+                if (int.TryParse(selectedAccountIndexInput, out selectedAccountIndex) && selectedAccountIndex >= 1 && selectedAccountIndex <= accounts.Count)
+                {
+                    return accounts[selectedAccountIndex - 1]; // Returnerar det valda kontot (-1 pga index)
+                }
+                else
+                {
+                    Console.WriteLine("Fel: Ogiltigt val. Försök igen."); // Skriver ut felmeddelande om valet inte är giltigt
+                }
+            }
         }
     }
 }

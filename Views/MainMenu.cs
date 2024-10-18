@@ -66,13 +66,16 @@ namespace BankApp
                 Console.Clear();
                 Console.WriteLine("ISA Banken - Skapa konto");
 
-                string accountType = InputValidation.GetAccountType(); // Hämtar kontotyp
-                decimal initialBalance = InputValidation.GetInitialBalance(); // Hämtar startbelopp
+                string? accountType = InputValidation.GetAccountType(); // Hämtar kontotyp
+                if(accountType == null) return; // Återgår till huvudmenyn om kontotypen är null
+
+                decimal? initialBalance = InputValidation.GetInitialBalance(); // Hämtar startbelopp
+                if(initialBalance == null) return; // Återgår till huvudmenyn om startbeloppet är null
 
                 string accountNumber = accountService.GenerateAccountNumber(); // Genererar ett nytt kontonummer
-                var account = accountService.CreateAccount(accountNumber, personalNumber, accountType, initialBalance); // Skapar ett nytt konto i databasen
+                var account = accountService.CreateAccount(accountNumber, personalNumber, accountType, initialBalance.Value); // Skapar ett nytt konto i databasen
 
-                transactionService.AddTransaction(accountNumber, "Insättning vid kontoskapande", initialBalance); // Skapar en transaktion för insättningen
+                transactionService.AddTransaction(accountNumber, "Insättning vid kontoskapande", initialBalance.Value); // Skapar en transaktion för insättningen
 
                 Console.WriteLine($"{accountType} skapat med kontonummer {account.AccountNumber} och startbelopp {account.Balance:C}."); // Skriver ut bekräftelse
                 Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
@@ -101,16 +104,18 @@ namespace BankApp
                 if (!accounts.Any()) return;
 
                 // Anropar metod för att välja konto
-                var selectedAccount = accountService.SelectAccount(accounts, "Välj vilket konto du vill sätta in pengar på (ange siffra): ");
+                var selectedAccount = InputValidation.SelectAccount(accounts, "Välj vilket konto du vill sätta in pengar på (ange siffra) eller skriv 'X' för att avbryta: ");
+                if(selectedAccount == null) return; // Återgår till huvudmenyn om kontot är null
 
                 // Anropar metod för att validera och få giltigt belopp
-                decimal amount = InputValidation.GetValidAmount("Ange belopp att sätta in (minst 100 kr): ", 100);
+                decimal? amount = InputValidation.GetValidAmount("Ange belopp att sätta in (minst 100 kr)", 100);
+                if(amount == null) return; // Återgår till huvudmenyn om beloppet är null
 
                 // Kontrollerar om insättningen lyckades i databasen
-                if (accountService.Deposit(selectedAccount.AccountNumber!, amount))
+                if (accountService.Deposit(selectedAccount.AccountNumber!, amount.Value))
                 {
-                    transactionService.AddTransaction(selectedAccount.AccountNumber!, "Insättning", amount); // Lägger till transaktionen i databasen
-                    Console.WriteLine($"Insättning lyckades. Nytt saldo för {selectedAccount.AccountType}: {selectedAccount.Balance + amount:C}"); // Skriver ut bekräftelse
+                    transactionService.AddTransaction(selectedAccount.AccountNumber!, "Insättning", amount.Value); // Lägger till transaktionen i databasen
+                    Console.WriteLine($"Insättning lyckades. Nytt saldo för {selectedAccount.AccountType}: {selectedAccount.Balance + amount.Value:C}"); // Skriver ut bekräftelse
                     Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
                     Console.ReadKey();
                 }
@@ -138,24 +143,26 @@ namespace BankApp
                 if (!accounts.Any()) return;
 
                 // Anropar metod för att välja konto
-                var selectedAccount = accountService.SelectAccount(accounts, "Välj vilket konto du vill ta ut pengar från (ange siffra): ");
+                var selectedAccount = InputValidation.SelectAccount(accounts, "Välj vilket konto du vill ta ut pengar från (ange siffra) eller skriv 'X' för att avbryta: ");
+                if (selectedAccount == null) return; // Återgår till huvudmenyn om kontot är null
 
-                decimal amount; // Variabel för att lagra beloppet
+                decimal? amount; // Variabel för att lagra beloppet
 
                 while (true) // Loopar tills ett giltigt belopp anges
                 {
                     // Anropar metod för att validera och få giltigt belopp
                     amount = InputValidation.GetValidAmount("Ange belopp att ta ut (minst 100 kr): ", 100);
+                    if (amount == null) return; // Återgår till huvudmenyn om beloppet är null
 
                     // Kontrollerar om beloppet är högre än kontots saldo
-                    if (selectedAccount.Balance >= amount)
+                    if (selectedAccount.Balance >= amount.Value)
                     {
                         // Kontrollerar om uttaget lyckades genomföras i databasen
-                        if (accountService.Withdraw(selectedAccount.AccountNumber!, amount))
+                        if (accountService.Withdraw(selectedAccount.AccountNumber!, amount.Value))
                         {
-                            selectedAccount.Balance -= amount; // Uppdaterar saldot
-                            transactionService.AddTransaction(selectedAccount.AccountNumber!, "Uttag", amount); // Lägger till transaktionen i databasen
-                            Console.WriteLine($"Uttag av {amount:C} lyckades. Nytt saldo för {selectedAccount.AccountType}: {selectedAccount.Balance:C}");
+                            selectedAccount.Balance -= amount.Value; // Uppdaterar saldot
+                            transactionService.AddTransaction(selectedAccount.AccountNumber!, "Uttag", amount.Value); // Lägger till transaktionen i databasen
+                            Console.WriteLine($"Uttag av {amount.Value:C} lyckades. Nytt saldo för {selectedAccount.AccountType}: {selectedAccount.Balance:C}");
                             break; // Bryter ut ur loopen efter lyckad transaktion
                         }
                     }
@@ -222,7 +229,8 @@ namespace BankApp
                 if (!accounts.Any()) return;
 
                 // Anropar metod för att välja konto
-                var selectedAccount = accountService.SelectAccount(accounts, "Välj ett konto för att visa transaktioner (ange siffra): ");
+                var selectedAccount = InputValidation.SelectAccount(accounts, "Välj ett konto för att visa transaktioner (ange siffra) eller skriv 'X' för att avbryta: ");
+                if (selectedAccount == null) return; // Återgår till huvudmenyn om kontot är null
 
                 // Hämtar transaktioner för valt konto
                 var transactions = transactionService.GetTransactionsByAccount(selectedAccount.AccountNumber!);
