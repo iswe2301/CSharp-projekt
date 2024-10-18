@@ -116,36 +116,5 @@ namespace BankApp
             int randomNumber = random.Next(10000000, 99999999); // Slumpar ett nummer mellan 10000000 och 99999999, totalt 8 siffror
             return $"2034-{randomNumber}"; // Kombinerar clearingnummer med det slumpmässiga numret och returnerar
         }
-
-        // Metod för att välja ett specifikt konto från en lista
-        public Account SelectAccount(List<Account> accounts, string prompt)
-        {
-            Console.WriteLine("\nMina konton:");
-
-            // Loopar igenom användarens konton och skriver ut dem
-            for (int i = 0; i < accounts.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {accounts[i].AccountType} - {accounts[i].AccountNumber} (Saldo: {accounts[i].Balance:C})");
-            }
-
-            int selectedAccountIndex; // Variabel för att lagra det valda kontots index
-
-            // Loopar tills användaren valt ett giltigt konto
-            while (true)
-            {
-                Console.Write(prompt); // Skriver ut meddelandet som skickats in
-                string? selectedAccountIndexInput = Console.ReadLine(); // Läser in användarens val
-
-                // Kontrollerar att användaren valt ett giltigt konto
-                if (int.TryParse(selectedAccountIndexInput, out selectedAccountIndex) && selectedAccountIndex >= 1 && selectedAccountIndex <= accounts.Count)
-                {
-                    return accounts[selectedAccountIndex - 1]; // Returnerar det valda kontot (-1 pga index)
-                }
-                else
-                {
-                    Console.WriteLine("Fel: Ogiltigt val. Försök igen."); // Skriver ut felmeddelande om valet inte är giltigt
-                }
-            }
-        }
     }
 }
