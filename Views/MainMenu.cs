@@ -8,6 +8,7 @@ namespace BankApp
         // Metod för att visa huvudmenyn i inloggat läge
         public void ShowMainMenu(AccountService accountService, TransactionService transactionService, User? user)
         {
+            var loanService = new LoanService(); // Skapar en instans av LoanService
             while (true)
             {
                 // Rensar konsolen för huvudmenyn
@@ -36,6 +37,9 @@ namespace BankApp
                         ShowTransactions(accountService, transactionService, user!.PersonalNumber); // Anropa metod för att visa transaktioner
                         break;
                     case "6":
+                        MakeLoanApplication(loanService); // Anropar metod för att göra en låneansökan
+                        break;
+                    case "7":
                         return; // Avbryter och återgår till huvudmenyn för att logga in eller registrera en ny användare
                     default:
                         Console.WriteLine("Ogiltigt val, försök igen."); // Felmeddelande vid ogiltigt val
@@ -54,8 +58,9 @@ namespace BankApp
             Console.WriteLine("3. Uttag");
             Console.WriteLine("4. Mina konton");
             Console.WriteLine("5. Transaktioner");
-            Console.WriteLine("6. Logga ut");
-            Console.Write("\nVälj ett alternativ (1-6): ");
+            Console.WriteLine("6. Låneansökan");
+            Console.WriteLine("7. Logga ut");
+            Console.Write("\nVälj ett alternativ (1-7): ");
         }
 
         // Metod för att skapa nytt konto
@@ -67,10 +72,10 @@ namespace BankApp
                 Console.WriteLine("ISA Banken - Skapa konto");
 
                 string? accountType = InputValidation.GetAccountType(); // Hämtar kontotyp
-                if(accountType == null) return; // Återgår till huvudmenyn om kontotypen är null
+                if (accountType == null) return; // Återgår till huvudmenyn om kontotypen är null
 
                 decimal? initialBalance = InputValidation.GetInitialBalance(); // Hämtar startbelopp
-                if(initialBalance == null) return; // Återgår till huvudmenyn om startbeloppet är null
+                if (initialBalance == null) return; // Återgår till huvudmenyn om startbeloppet är null
 
                 string accountNumber = accountService.GenerateAccountNumber(); // Genererar ett nytt kontonummer
                 var account = accountService.CreateAccount(accountNumber, personalNumber, accountType, initialBalance.Value); // Skapar ett nytt konto i databasen
@@ -105,11 +110,11 @@ namespace BankApp
 
                 // Anropar metod för att välja konto
                 var selectedAccount = InputValidation.SelectAccount(accounts, "Välj vilket konto du vill sätta in pengar på (ange siffra) eller skriv 'X' för att avbryta: ");
-                if(selectedAccount == null) return; // Återgår till huvudmenyn om kontot är null
+                if (selectedAccount == null) return; // Återgår till huvudmenyn om kontot är null
 
                 // Anropar metod för att validera och få giltigt belopp
                 decimal? amount = InputValidation.GetValidAmount("Ange belopp att sätta in (minst 100 kr)", 100);
-                if(amount == null) return; // Återgår till huvudmenyn om beloppet är null
+                if (amount == null) return; // Återgår till huvudmenyn om beloppet är null
 
                 // Kontrollerar om insättningen lyckades i databasen
                 if (accountService.Deposit(selectedAccount.AccountNumber!, amount.Value))
@@ -259,6 +264,58 @@ namespace BankApp
             catch (Exception ex) // Fångar upp eventuella fel
             {
                 Console.WriteLine($"Ett fel uppstod vid visning av transaktioner: {ex.Message}");
+                Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+        }
+
+        // Metod för att göra en låneansökan
+        private void MakeLoanApplication(LoanService loanService)
+        {
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("ISA Banken - Låneansökan");
+                Console.WriteLine("Fyll i ansökan med de uppgifter som efterfrågas så får du ett förhandsbesked på om ditt lån kommer att beviljas eller inte.");
+
+                // Hämtar input från användaren och validerar den
+                float monthlyIncome = InputValidation.GetValidMoneyInput("\nAnge din månadsinkomst (brutto) eller skriv 'X' för att avbryta: ", 0);
+                if (monthlyIncome == -1) return; // Avbryter om användaren skriver X
+
+                float monthlyExpenses = InputValidation.GetValidMoneyInput("Ange dina månatliga utgifter eller skriv 'X' för att avbryta: ", 0);
+                if (monthlyExpenses == -1) return; // Avbryter om användaren skriver X
+
+                float loanAmount = InputValidation.GetValidMoneyInput("Ange det belopp som du önskar låna (minst 10 000 kr) eller skriv 'X' för att avbryta: ", 10000);
+                if (loanAmount == -1) return; // Avbryter om användaren skriver X
+
+                string? hasFixedIncome = InputValidation.GetYesOrNoInput("Har du en fast månatlig inkomst? (Ja/Nej) eller skriv 'X' för att avbryta: ");
+                if (hasFixedIncome == null) return; // Avbryter om användaren skriver X
+
+                string? isEmployed = InputValidation.GetYesOrNoInput("Är du fast anställd på 100%? (Ja/Nej) eller skriv 'X' för att avbryta: ");
+                if (isEmployed == null) return; // Avbryter om användaren skriver X
+
+                string? hasCurrentLoan = InputValidation.GetYesOrNoInput("Har du befintliga lån idag? (Ja/Nej) eller skriv 'X' för att avbryta: ");
+                if (hasCurrentLoan == null) return; // Avbryter om användaren skriver X
+
+                string? hasDebtIssues = InputValidation.GetYesOrNoInput("Har du betalningsanmärkningar? (Ja/Nej) eller skriv 'X' för att avbryta: ");
+                if (hasDebtIssues == null) return; // Avbryter om användaren skriver X
+
+                // Anropar metoden för att förutsäga om lånet kommer att bli beviljat
+                string prediction = loanService.PredictLoanApproval(monthlyIncome, monthlyExpenses, loanAmount, hasFixedIncome, isEmployed, hasCurrentLoan, hasDebtIssues);
+
+                Console.WriteLine("Behandlar din ansökan..."); // Skriver ut meddelande om att ansökan behandlas
+                System.Threading.Thread.Sleep(2000); // Väntar 2 sekunder så att användaren hinner läsa meddelandet
+                Console.Clear(); // Rensar konsolen
+                Console.WriteLine("ISA Banken - Låneansökan");
+                Console.WriteLine("\nDitt förhandsbesked:");
+                Console.WriteLine(prediction); // Skriver ut förutsägelsen
+
+                Console.WriteLine("\nTryck på valfri knapp för att återgå till huvudmenyn...");
+                Console.ReadKey();
+            }
+            catch (Exception ex) // Fångar upp eventuella fel
+            {
+                Console.WriteLine($"Ett fel uppstod vid låneansökan: {ex.Message}");
                 Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
                 Console.ReadKey();
             }
