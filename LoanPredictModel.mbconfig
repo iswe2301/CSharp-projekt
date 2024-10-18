@@ -1,0 +1,473 @@
+﻿{
+  "Scenario": "Classification",
+  "DataSource": {
+    "Version": 3,
+    "EscapeCharacter": "\"",
+    "ReadMultiLines": false,
+    "KeepDiacritics": false,
+    "KeepPunctuations": false,
+    "AllowQuoting": false,
+    "Type": "TabularFile",
+    "FilePath": "C:\\Users\\IsaWestling\\OneDrive - SSG Standard Solutions Group AB\\Skrivbordet\\LoanData.txt",
+    "Delimiter": ",",
+    "DecimalMarker": ".",
+    "HasHeader": true,
+    "ColumnProperties": [
+      {
+        "ColumnName": "MonthlyIncome",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "MonthlyExpenses",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "LoanAmount",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "HasFixedIncome",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": true,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "IsEmployed",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": true,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "HasCurrentLoan",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": true,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "HasDebtIssues",
+        "ColumnPurpose": "Feature",
+        "ColumnDataFormat": "String",
+        "IsCategorical": true,
+        "Type": "Column",
+        "Version": 5
+      },
+      {
+        "ColumnName": "LoanApproval",
+        "ColumnPurpose": "Label",
+        "ColumnDataFormat": "String",
+        "IsCategorical": true,
+        "Type": "Column",
+        "Version": 5
+      }
+    ]
+  },
+  "Environment": {
+    "Type": "LocalCPU",
+    "Version": 1
+  },
+  "RunHistory": {
+    "Version": 3,
+    "Type": "Result",
+    "Trials": [
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "LightGbmMulti",
+        "Score": 0.83141414141414138,
+        "RuntimeInSeconds": 0.239,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e6 * e11",
+          "e0": {
+            "OutputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues"
+            ],
+            "InputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues"
+            ]
+          },
+          "e1": {
+            "OutputColumnNames": [
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ],
+            "InputColumnNames": [
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ]
+          },
+          "e11": {
+            "OutputColumnName": "PredictedLabel",
+            "InputColumnName": "PredictedLabel"
+          },
+          "e2": {
+            "InputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues",
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e3": {
+            "OutputColumnName": "LoanApproval",
+            "InputColumnName": "LoanApproval",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e6": {
+            "NumberOfLeaves": 880,
+            "MinimumExampleCountPerLeaf": 20,
+            "LearningRate": 0.678611043354218,
+            "NumberOfTrees": 4,
+            "SubsampleFraction": 0.99938692505338678,
+            "MaximumBinCountPerFeature": 280,
+            "FeatureFraction": 0.98971091532254829,
+            "L1Regularization": 2.2852012725867264E-10,
+            "L2Regularization": 0.71213707180408714,
+            "LabelColumnName": "LoanApproval",
+            "FeatureColumnName": "Features"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "LightGbmMulti",
+        "Score": 0.83141414141414138,
+        "RuntimeInSeconds": 0.281,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e6 * e11",
+          "e0": {
+            "OutputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues"
+            ],
+            "InputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues"
+            ]
+          },
+          "e1": {
+            "OutputColumnNames": [
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ],
+            "InputColumnNames": [
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ]
+          },
+          "e11": {
+            "OutputColumnName": "PredictedLabel",
+            "InputColumnName": "PredictedLabel"
+          },
+          "e2": {
+            "InputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues",
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e3": {
+            "OutputColumnName": "LoanApproval",
+            "InputColumnName": "LoanApproval",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e6": {
+            "NumberOfLeaves": 584,
+            "MinimumExampleCountPerLeaf": 20,
+            "LearningRate": 0.53685468869597963,
+            "NumberOfTrees": 4,
+            "SubsampleFraction": 0.99999977667298645,
+            "MaximumBinCountPerFeature": 290,
+            "FeatureFraction": 0.98612913476250741,
+            "L1Regularization": 2.2883987181941477E-10,
+            "L2Regularization": 0.6461763317203123,
+            "LabelColumnName": "LoanApproval",
+            "FeatureColumnName": "Features"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "LightGbmMulti",
+        "Score": 0.83141414141414138,
+        "RuntimeInSeconds": 0.316,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e6 * e11",
+          "e0": {
+            "OutputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues"
+            ],
+            "InputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues"
+            ]
+          },
+          "e1": {
+            "OutputColumnNames": [
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ],
+            "InputColumnNames": [
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ]
+          },
+          "e11": {
+            "OutputColumnName": "PredictedLabel",
+            "InputColumnName": "PredictedLabel"
+          },
+          "e2": {
+            "InputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues",
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e3": {
+            "OutputColumnName": "LoanApproval",
+            "InputColumnName": "LoanApproval",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e6": {
+            "NumberOfLeaves": 717,
+            "MinimumExampleCountPerLeaf": 20,
+            "LearningRate": 0.74194854495689277,
+            "NumberOfTrees": 4,
+            "SubsampleFraction": 0.95667651506092766,
+            "MaximumBinCountPerFeature": 281,
+            "FeatureFraction": 0.98819660099446915,
+            "L1Regularization": 2.4111580324507721E-10,
+            "L2Regularization": 0.6732803492098659,
+            "LabelColumnName": "LoanApproval",
+            "FeatureColumnName": "Features"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "LightGbmMulti",
+        "Score": 0.83141414141414138,
+        "RuntimeInSeconds": 0.264,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e6 * e11",
+          "e0": {
+            "OutputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues"
+            ],
+            "InputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues"
+            ]
+          },
+          "e1": {
+            "OutputColumnNames": [
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ],
+            "InputColumnNames": [
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ]
+          },
+          "e11": {
+            "OutputColumnName": "PredictedLabel",
+            "InputColumnName": "PredictedLabel"
+          },
+          "e2": {
+            "InputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues",
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e3": {
+            "OutputColumnName": "LoanApproval",
+            "InputColumnName": "LoanApproval",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e6": {
+            "NumberOfLeaves": 1022,
+            "MinimumExampleCountPerLeaf": 20,
+            "LearningRate": 0.61608690043041936,
+            "NumberOfTrees": 4,
+            "SubsampleFraction": 0.97988295158832139,
+            "MaximumBinCountPerFeature": 273,
+            "FeatureFraction": 0.98833205095917664,
+            "L1Regularization": 2.3578712201399326E-10,
+            "L2Regularization": 0.75364462986112446,
+            "LabelColumnName": "LoanApproval",
+            "FeatureColumnName": "Features"
+          }
+        }
+      },
+      {
+        "Version": 1,
+        "Type": "Trial",
+        "TrainerName": "LightGbmMulti",
+        "Score": 0.83141414141414138,
+        "RuntimeInSeconds": 0.233,
+        "Parameter": {
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e6 * e11",
+          "e0": {
+            "OutputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues"
+            ],
+            "InputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues"
+            ]
+          },
+          "e1": {
+            "OutputColumnNames": [
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ],
+            "InputColumnNames": [
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ]
+          },
+          "e11": {
+            "OutputColumnName": "PredictedLabel",
+            "InputColumnName": "PredictedLabel"
+          },
+          "e2": {
+            "InputColumnNames": [
+              "HasFixedIncome",
+              "IsEmployed",
+              "HasCurrentLoan",
+              "HasDebtIssues",
+              "MonthlyIncome",
+              "MonthlyExpenses",
+              "LoanAmount"
+            ],
+            "OutputColumnName": "Features"
+          },
+          "e3": {
+            "OutputColumnName": "LoanApproval",
+            "InputColumnName": "LoanApproval",
+            "AddKeyValueAnnotationsAsText": false
+          },
+          "e6": {
+            "NumberOfLeaves": 855,
+            "MinimumExampleCountPerLeaf": 20,
+            "LearningRate": 0.64874790426773588,
+            "NumberOfTrees": 4,
+            "SubsampleFraction": 0.99226631236028617,
+            "MaximumBinCountPerFeature": 280,
+            "FeatureFraction": 0.99129183660617171,
+            "L1Regularization": 2.1950351126670002E-10,
+            "L2Regularization": 0.69591018287848128,
+            "LabelColumnName": "LoanApproval",
+            "FeatureColumnName": "Features"
+          }
+        }
+      }
+    ],
+    "Estimators": {
+      "e0": "OneHotEncoding",
+      "e1": "ReplaceMissingValues",
+      "e2": "Concatenate",
+      "e3": "MapValueToKey",
+      "e4": "FastTreeOva",
+      "e5": "FastForestOva",
+      "e6": "LightGbmMulti",
+      "e7": "LbfgsLogisticRegressionOva",
+      "e8": "LbfgsMaximumEntropyMulti",
+      "e9": "SdcaMaximumEntropyMulti",
+      "e10": "SdcaLogisticRegressionOva",
+      "e11": "MapKeyToValue"
+    },
+    "Schema": "e0 * e1 * e2 * e3 * (e4 + e5 + e6 + e7 + e8 + e9 + e10) * e11",
+    "MetricName": "MacroAccuracy",
+    "ModelFilePath": "C:\\Users\\IsaWestling\\source\\repos\\CSharp-projekt\\LoanPredictModel.mlnet"
+  },
+  "Type": "TrainingConfig",
+  "Version": 5,
+  "TrainingOption": {
+    "Version": 2,
+    "Subsampling": false,
+    "Type": "ClassificationTrainingOption",
+    "TrainingTime": 600,
+    "LabelColumn": "LoanApproval",
+    "ValidationOption": {
+      "Version": 0,
+      "Type": "CrossValidationValidationOption",
+      "NumberOfFolds": 5
+    }
+  }
+}
