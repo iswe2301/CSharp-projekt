@@ -29,23 +29,23 @@ namespace BankApp
 
             [LoadColumn(3)]
             [ColumnName(@"HasFixedIncome")]
-            public string HasFixedIncome { get; set; }
+            public string? HasFixedIncome { get; set; }
 
             [LoadColumn(4)]
             [ColumnName(@"IsEmployed")]
-            public string IsEmployed { get; set; }
+            public string? IsEmployed { get; set; }
 
             [LoadColumn(5)]
             [ColumnName(@"HasCurrentLoan")]
-            public string HasCurrentLoan { get; set; }
+            public string? HasCurrentLoan { get; set; }
 
             [LoadColumn(6)]
             [ColumnName(@"HasDebtIssues")]
-            public string HasDebtIssues { get; set; }
+            public string? HasDebtIssues { get; set; }
 
             [LoadColumn(7)]
             [ColumnName(@"LoanApproval")]
-            public string LoanApproval { get; set; }
+            public string? LoanApproval { get; set; }
 
         }
 
@@ -67,28 +67,28 @@ namespace BankApp
             public float LoanAmount { get; set; }
 
             [ColumnName(@"HasFixedIncome")]
-            public float[] HasFixedIncome { get; set; }
+            public float[]? HasFixedIncome { get; set; }
 
             [ColumnName(@"IsEmployed")]
-            public float[] IsEmployed { get; set; }
+            public float[]? IsEmployed { get; set; }
 
             [ColumnName(@"HasCurrentLoan")]
-            public float[] HasCurrentLoan { get; set; }
+            public float[]? HasCurrentLoan { get; set; }
 
             [ColumnName(@"HasDebtIssues")]
-            public float[] HasDebtIssues { get; set; }
+            public float[]? HasDebtIssues { get; set; }
 
             [ColumnName(@"LoanApproval")]
             public uint LoanApproval { get; set; }
 
             [ColumnName(@"Features")]
-            public float[] Features { get; set; }
+            public float[]? Features { get; set; }
 
             [ColumnName(@"PredictedLabel")]
-            public string PredictedLabel { get; set; }
+            public string? PredictedLabel { get; set; }
 
             [ColumnName(@"Score")]
-            public float[] Score { get; set; }
+            public float[]? Score { get; set; }
 
         }
 
@@ -126,7 +126,7 @@ namespace BankApp
         /// <exception cref="Exception"></exception>
         public static IOrderedEnumerable<KeyValuePair<string, float>> GetSortedScoresWithLabels(ModelOutput result)
         {
-            var unlabeledScores = result.Score;
+            var unlabeledScores = result.Score ?? Array.Empty<float>(); // Om det inte finns några förutsägelser returneras en tom array
             var labelNames = GetLabels(result);
 
             Dictionary<string, float> labledScores = new Dictionary<string, float>();
