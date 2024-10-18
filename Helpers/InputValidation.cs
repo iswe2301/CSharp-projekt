@@ -202,5 +202,57 @@ namespace BankApp
                 }
             }
         }
+
+        // Metod för att validera och hämta ja/nej-input
+        public static string? GetYesOrNoInput(string prompt)
+        {
+            // Loopar tills användaren har angett "Ja" eller "Nej"
+            while (true)
+            {
+                Console.Write(prompt); // Skriver ut prompten
+                string? input = Console.ReadLine()?.Trim().ToUpper(); // Läser in och trimmar input, konverterar till versaler
+
+                // Kontrollerar om användaren vill avbryta
+                if (input == "X")
+                {
+                    return null; // Returnerar null för att avbryta
+                }
+                // Kontrollerar om input är ja eller nej
+                else if (input == "JA" || input == "NEJ")
+                {
+                    return input; // Returnerar giltig input
+                }
+                else
+                {
+                    Console.WriteLine("Fel: Ange 'Ja' eller 'Nej'. Försök igen."); // Felmeddelande om input inte är ja eller nej
+                }
+            }
+        }
+
+        // Metod för att validera och hämta giltig input för belopp i låneansökan
+        public static float GetValidMoneyInput(string prompt, float minValue)
+        {
+            // Loopar tills användaren har angett ett giltigt belopp som är minst minValue
+            while (true)
+            {
+                Console.Write(prompt); // Skriver ut prompten
+                string? input = Console.ReadLine()?.Trim(); // Läser in och trimmar input
+
+                // Kontrollerar om användaren vill avbryta
+                if (input?.ToUpper() == "X")
+                {
+                    return -1; // Returnerar -1 för att avbryta
+                }
+                // Kontrollerar att input är ett giltigt belopp som är minst minValue
+                if (float.TryParse(input, out float result) && result >= minValue)
+                {
+                    return result; // Returnerar det giltiga beloppet
+                }
+                else
+                {
+                    Console.WriteLine($"Fel: Ange ett giltigt belopp som är minst {minValue} kr. Försök igen."); // Felmeddelande om beloppet är ogiltigt
+                }
+            }
+        }
     }
 }
