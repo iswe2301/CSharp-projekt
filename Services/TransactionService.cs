@@ -15,12 +15,12 @@ namespace BankApp
         }
 
         // Metod för att lägga till en ny transaktion i databasen
-        public void AddTransaction(string accountNumber, string transactionType, decimal amount)
+        public async Task AddTransaction(string accountNumber, string transactionType, decimal amount)
         {
             try
             {
                 var transaction = new Transaction(accountNumber, transactionType, amount); // Skapar en ny transaktion
-                transactionsCollection.InsertOne(transaction); // Lägger till transaktionen i databasen
+                await transactionsCollection.InsertOneAsync(transaction); // Lägger till transaktionen i databasen
             }
             catch (MongoException ex) // Fångar upp eventuella fel
             {
@@ -30,11 +30,11 @@ namespace BankApp
         }
 
         // Metod för att hämta alla transaktioner för ett specifikt konto
-        public List<Transaction> GetTransactionsByAccount(string accountNumber)
+        public async Task<List<Transaction>> GetTransactionsByAccount(string accountNumber)
         {
             try
             {
-                return transactionsCollection.Find(t => t.AccountNumber == accountNumber).ToList(); // Hämtar transaktioner baserat på kontonummer, returnerar en lista
+                return await transactionsCollection.Find(t => t.AccountNumber == accountNumber).ToListAsync(); // Hämtar transaktioner baserat på kontonummer, returnerar en lista
             }
             catch (MongoException ex) // Fångar upp eventuella fel
             {

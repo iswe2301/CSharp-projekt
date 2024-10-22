@@ -38,11 +38,11 @@ namespace BankApp
         }
 
         // Metod för att logga in befintlig användare
-        public (LoginStatus, User?) LoginUser(string personalNumber, string password)
+        public async Task<(LoginStatus, User?)> LoginUser(string personalNumber, string password)
         {
             try
             {
-                var user = userService.GetUserByPersonalNumber(personalNumber); // Hämtar användaren via UserService
+                var user = await userService.GetUserByPersonalNumber(personalNumber); // Hämtar användaren via UserService
 
                 // Kontrollerar om användaren finns och om lösenordet är korrekt
                 if (user == null)

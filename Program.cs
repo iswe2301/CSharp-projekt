@@ -5,7 +5,7 @@ namespace BankApp
     // Huvudklass för att köra programmet
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
 
             // Sätter konsolens teckenkodning till Unicode för att kunna skriva ut ÅÄÖ korrekt i konsolen
@@ -16,16 +16,25 @@ namespace BankApp
             var authService = new AuthService(userService); // Skapar en instans av AuthService, skickar med UserService
             var accountService = new AccountService();  // Skapar en instans av AccountService
             var transactionService = new TransactionService(); // Skapar en instans av TransactionService
-            User? user = null; // Variabel för att lagra användaren
 
-            // Anropar metod för att visa autentiseringsmenyn, skickar med instanser av UserService, AuthService, AccountService, TransactionService och en referens till användaren
-            ShowAuthMenu(userService, authService, accountService, transactionService, ref user);
+            // Anropar metod för att visa autentiseringsmenyn, skickar med instanser av UserService och AuthService
+            var user = await ShowAuthMenu(userService, authService);
+
+            // Kontrollerar om användaren är inloggad och visar huvudmenyn
+            if (user != null)
+            {
+                var mainMenu = new MainMenu();
+                await mainMenu.ShowMainMenu(accountService, transactionService, user);
+            }
         }
 
         // Hanterar inloggning och registrering
-        static void ShowAuthMenu(UserService userService, AuthService authService, AccountService accountService, TransactionService transactionService, ref User? user)
+        static async Task<User?> ShowAuthMenu(UserService userService, AuthService authService)
         {
-            while (true)
+            User? user = null; // Variabel för att lagra användaren
+
+            // Loopar tills användaren är registrerad eller inloggad
+            while (user == null)
             {
                 // Rensar konsolen
                 Console.Clear();
@@ -40,26 +49,22 @@ namespace BankApp
                 {
                     case "1":
                         // Anropar metod för att registrera ny användare
-                        user = RegisterNewUser(userService);
+                        user = await RegisterNewUser(userService);
                         // Kontrollerar om användaren registrerades
                         if (user != null)
                         {
                             Console.WriteLine("Registrering lyckades. Loggar in...");
                             System.Threading.Thread.Sleep(2000); // Väntar 2 sekunder
-                            var mainMenu = new MainMenu(); // Instansierar huvudmenyn och skickar den vidare
-                            mainMenu.ShowMainMenu(accountService, transactionService, user); // Visar huvudmenyn för inloggad användare
                         }
                         break;
                     case "2":
                         // Anropar metod för att logga in befintlig användare
-                        user = LoginUser(authService, userService);
+                        user = await LoginUser(authService, userService);
                         // Kontrollerar om användaren loggades in
                         if (user != null)
                         {
                             Console.WriteLine("Loggar in...");
                             System.Threading.Thread.Sleep(1000); // Väntar 1 sekund
-                            var mainMenu = new MainMenu(); // Instansierar huvudmenyn och skickar den vidare
-                            mainMenu.ShowMainMenu(accountService, transactionService, user); // Visar huvudmenyn för inloggad användare
                         }
                         break;
                     default:
@@ -68,10 +73,11 @@ namespace BankApp
                         break;
                 }
             }
+            return user; // Returnerar användaren
         }
 
         // Metod för att registrera ny användare
-        static User? RegisterNewUser(UserService userService)
+        static async Task<User?> RegisterNewUser(UserService userService)
         {
             // Försöker registrera en ny användare
             try
@@ -93,7 +99,7 @@ namespace BankApp
                 if (password == null) return null; // Återgår om användaren tryckte på X
 
                 // Registrerar användaren i databasen 
-                var user = userService.RegisterNewUser(personalNumber, firstName, lastName, password);
+                var user = await userService.RegisterNewUser(personalNumber, firstName, lastName, password);
 
                 // Kontrollerar om användaren redan finns
                 if (user == null)
@@ -113,7 +119,7 @@ namespace BankApp
         }
 
         // Metod för att logga in befintlig användare
-        static User? LoginUser(AuthService authService, UserService userService)
+        static async Task<User?> LoginUser(AuthService authService, UserService userService)
         {
             // Försöker logga in användaren
             try
@@ -134,7 +140,7 @@ namespace BankApp
                     string? passwordInput = InputValidation.GetValidPassword(false); // Anropar metod för att hämta giltigt lösenord, kontrollerar inte längd
                     if (passwordInput == null) return null; // Återgår till huvudmenyn om användaren trycker på X
 
-                    (loginStatus, user) = authService.LoginUser(personalNumber, passwordInput); // Försöker logga in användaren
+                    (loginStatus, user) = await authService.LoginUser(personalNumber, passwordInput); // Försöker logga in användaren
 
                     // Kontrollerar inloggningsstatus
                     if (loginStatus == AuthService.LoginStatus.UserNotFound)

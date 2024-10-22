@@ -16,7 +16,7 @@ namespace BankApp
         }
 
         // Metod för att skapa ett nytt konto
-        public Account CreateAccount(string accountNumber, string ownerPersonalNumber, string accountType, decimal initialBalance)
+        public async Task<Account> CreateAccount(string accountNumber, string ownerPersonalNumber, string accountType, decimal initialBalance)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace BankApp
                     Balance = initialBalance
                 };
 
-                accountsCollection.InsertOne(newAccount); // Lägger till kontot i databasen
+                await accountsCollection.InsertOneAsync(newAccount); // Lägger till kontot i databasen
                 return newAccount; // Returnerar det nya kontot
             }
             catch (MongoException ex) // Fångar upp eventuella fel
@@ -40,11 +40,11 @@ namespace BankApp
         }
 
         // Metod för att hämta kunds konton baserat på kontonummer
-        public List<Account> GetAccountsByUser(string personalNumber)
+        public async Task<List<Account>> GetAccountsByUser(string personalNumber)
         {
             try
             {
-                var accounts = accountsCollection.Find(a => a.OwnerPersonalNumber == personalNumber).ToList(); // Hämtar konton baserat på personnummer, returnerar en lista
+                var accounts = await accountsCollection.Find(a => a.OwnerPersonalNumber == personalNumber).ToListAsync(); // Hämtar konton baserat på personnummer, returnerar en lista
 
                 // Kontrollerar om inga konton finns och skriver ut meddelande
                 if (accounts == null || !accounts.Any())
@@ -54,7 +54,7 @@ namespace BankApp
                     Console.ReadKey();
                     return new List<Account>(); // Returnerar en tom lista om inga konton finns
                 }
-                    return accounts; // Returnerar listan med konton
+                return accounts; // Returnerar listan med konton
             }
             catch (MongoException ex) // Fångar upp eventuella fel
             {
@@ -64,17 +64,17 @@ namespace BankApp
         }
 
         // Metod för att sätta in pengar på ett konto (uppdatera befintligt saldo i db)
-        public bool Deposit(string accountNumber, decimal amount)
+        public async Task<bool> Deposit(string accountNumber, decimal amount)
         {
             try
             {
-                var account = accountsCollection.Find(a => a.AccountNumber == accountNumber).FirstOrDefault(); // Hämtar kontot från databasen
+                var account = await accountsCollection.Find(a => a.AccountNumber == accountNumber).FirstOrDefaultAsync(); // Hämtar kontot från databasen
 
                 // Kontrollerar om kontot finns
                 if (account != null)
                 {
                     account.Balance += amount; // Lägger till insättningen på kontot
-                    accountsCollection.ReplaceOne(a => a.AccountNumber == accountNumber, account); // Uppdaterar kontot i databasen
+                    await accountsCollection.ReplaceOneAsync(a => a.AccountNumber == accountNumber, account); // Uppdaterar kontot i databasen
                     return true; // Returnerar true när insättningen lyckades
                 }
                 return false; // Returnerar false om kontot inte hittades
@@ -87,17 +87,17 @@ namespace BankApp
         }
 
         // Metod för att göra ett uttag från ett konto (uppdatera befintligt saldo i db)
-        public bool Withdraw(string accountNumber, decimal amount)
+        public async Task<bool> Withdraw(string accountNumber, decimal amount)
         {
             try
             {
-                var account = accountsCollection.Find(a => a.AccountNumber == accountNumber).FirstOrDefault(); // Hämtar kontot från databasen
+                var account = await accountsCollection.Find(a => a.AccountNumber == accountNumber).FirstOrDefaultAsync(); // Hämtar kontot från databasen
 
                 // Kontrollerar om kontot finns och om det finns tillräckligt med pengar på kontot
                 if (account != null && account.Balance >= amount)
                 {
                     account.Balance -= amount; // Drar av beloppet från kontots saldo
-                    accountsCollection.ReplaceOne(a => a.AccountNumber == accountNumber, account); // Uppdaterar kontot i databasen
+                    await accountsCollection.ReplaceOneAsync(a => a.AccountNumber == accountNumber, account); // Uppdaterar kontot i databasen
                     return true; // Returnerar true när uttaget lyckades
                 }
                 return false; // Returnerar false om kontot inte hittades eller om det inte fanns tillräckligt med pengar

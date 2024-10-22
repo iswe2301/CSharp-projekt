@@ -6,7 +6,7 @@ namespace BankApp
     public class MainMenu
     {
         // Metod för att visa huvudmenyn i inloggat läge
-        public void ShowMainMenu(AccountService accountService, TransactionService transactionService, User? user)
+        public async Task ShowMainMenu(AccountService accountService, TransactionService transactionService, User? user)
         {
             var loanService = new LoanService(); // Skapar en instans av LoanService
             while (true)
@@ -22,19 +22,19 @@ namespace BankApp
                 switch (choice)
                 {
                     case "1":
-                        CreateNewAccount(accountService, transactionService, user!.PersonalNumber); // Anropar metoden för att skapa nytt konto
+                        await CreateNewAccount(accountService, transactionService, user!.PersonalNumber); // Anropar metoden för att skapa nytt konto
                         break;
                     case "2":
-                        DepositMoney(accountService, transactionService, user!.PersonalNumber); // Anropar metod för att sätta in pengar
+                        await DepositMoney(accountService, transactionService, user!.PersonalNumber); // Anropar metod för att sätta in pengar
                         break;
                     case "3":
-                        WithdrawMoney(accountService, transactionService, user!.PersonalNumber); // Anropar metod för att ta ut pengar
+                        await WithdrawMoney(accountService, transactionService, user!.PersonalNumber); // Anropar metod för att ta ut pengar
                         break;
                     case "4":
-                        ShowAccounts(accountService, user!.PersonalNumber); // Anropar metod för att visa konton
+                        await ShowAccounts(accountService, user!.PersonalNumber); // Anropar metod för att visa konton
                         break;
                     case "5":
-                        ShowTransactions(accountService, transactionService, user!.PersonalNumber); // Anropa metod för att visa transaktioner
+                        await ShowTransactions(accountService, transactionService, user!.PersonalNumber); // Anropa metod för att visa transaktioner
                         break;
                     case "6":
                         MakeLoanApplication(loanService); // Anropar metod för att göra en låneansökan
@@ -64,7 +64,7 @@ namespace BankApp
         }
 
         // Metod för att skapa nytt konto
-        private void CreateNewAccount(AccountService accountService, TransactionService transactionService, string personalNumber)
+        private async Task CreateNewAccount(AccountService accountService, TransactionService transactionService, string personalNumber)
         {
             try
             {
@@ -78,9 +78,9 @@ namespace BankApp
                 if (initialBalance == null) return; // Återgår till huvudmenyn om startbeloppet är null
 
                 string accountNumber = accountService.GenerateAccountNumber(); // Genererar ett nytt kontonummer
-                var account = accountService.CreateAccount(accountNumber, personalNumber, accountType, initialBalance.Value); // Skapar ett nytt konto i databasen
+                var account = await accountService.CreateAccount(accountNumber, personalNumber, accountType, initialBalance.Value); // Skapar ett nytt konto i databasen
 
-                transactionService.AddTransaction(accountNumber, "Insättning vid kontoskapande", initialBalance.Value); // Skapar en transaktion för insättningen
+                await transactionService.AddTransaction(accountNumber, "Insättning vid kontoskapande", initialBalance.Value); // Skapar en transaktion för insättningen
 
                 Console.WriteLine($"{accountType} skapat med kontonummer {account.AccountNumber} och startbelopp {account.Balance:C}."); // Skriver ut bekräftelse
                 Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
@@ -95,7 +95,7 @@ namespace BankApp
         }
 
         // Metod för att sätta in pengar på ett konto
-        private void DepositMoney(AccountService accountService, TransactionService transactionService, string personalNumber)
+        private async Task DepositMoney(AccountService accountService, TransactionService transactionService, string personalNumber)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace BankApp
                 Console.WriteLine("ISA Banken - Insättning");
 
                 // Hämtar alla användarens konton baserat på personnumret
-                var accounts = accountService.GetAccountsByUser(personalNumber);
+                var accounts = await accountService.GetAccountsByUser(personalNumber);
 
                 // Kontrollerar om användaren har några konton, annars avslutas metoden
                 if (!accounts.Any()) return;
@@ -117,9 +117,9 @@ namespace BankApp
                 if (amount == null) return; // Återgår till huvudmenyn om beloppet är null
 
                 // Kontrollerar om insättningen lyckades i databasen
-                if (accountService.Deposit(selectedAccount.AccountNumber!, amount.Value))
+                if (await accountService.Deposit(selectedAccount.AccountNumber!, amount.Value))
                 {
-                    transactionService.AddTransaction(selectedAccount.AccountNumber!, "Insättning", amount.Value); // Lägger till transaktionen i databasen
+                    await transactionService.AddTransaction(selectedAccount.AccountNumber!, "Insättning", amount.Value); // Lägger till transaktionen i databasen
                     Console.WriteLine($"Insättning lyckades. Nytt saldo för {selectedAccount.AccountType}: {selectedAccount.Balance + amount.Value:C}"); // Skriver ut bekräftelse
                     Console.WriteLine("Tryck på valfri knapp för att återgå till huvudmenyn...");
                     Console.ReadKey();
@@ -134,7 +134,7 @@ namespace BankApp
         }
 
         // Metod för att ta ut pengar från ett konto
-        private void WithdrawMoney(AccountService accountService, TransactionService transactionService, string personalNumber)
+        private async Task WithdrawMoney(AccountService accountService, TransactionService transactionService, string personalNumber)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace BankApp
                 Console.WriteLine("ISA Banken - Uttag");
 
                 // Hämtar alla användarens konton baserat på personnumret
-                var accounts = accountService.GetAccountsByUser(personalNumber);
+                var accounts = await accountService.GetAccountsByUser(personalNumber);
 
                 // Kontrollerar om användaren har några konton, annars avslutas metoden
                 if (!accounts.Any()) return;
@@ -163,10 +163,10 @@ namespace BankApp
                     if (selectedAccount.Balance >= amount.Value)
                     {
                         // Kontrollerar om uttaget lyckades genomföras i databasen
-                        if (accountService.Withdraw(selectedAccount.AccountNumber!, amount.Value))
+                        if (await accountService.Withdraw(selectedAccount.AccountNumber!, amount.Value))
                         {
                             selectedAccount.Balance -= amount.Value; // Uppdaterar saldot
-                            transactionService.AddTransaction(selectedAccount.AccountNumber!, "Uttag", amount.Value); // Lägger till transaktionen i databasen
+                            await transactionService.AddTransaction(selectedAccount.AccountNumber!, "Uttag", amount.Value); // Lägger till transaktionen i databasen
                             Console.WriteLine($"Uttag av {amount.Value:C} lyckades. Nytt saldo för {selectedAccount.AccountType}: {selectedAccount.Balance:C}");
                             break; // Bryter ut ur loopen efter lyckad transaktion
                         }
@@ -188,7 +188,7 @@ namespace BankApp
         }
 
         // Metod för att visa alla kundens konton
-        private void ShowAccounts(AccountService accountService, string personalNumber)
+        private async Task ShowAccounts(AccountService accountService, string personalNumber)
         {
             try
             {
@@ -196,7 +196,7 @@ namespace BankApp
                 Console.WriteLine("ISA Banken - Mina konton");
 
                 // Hämtar alla användarens konton baserat på personnumret
-                var accounts = accountService.GetAccountsByUser(personalNumber);
+                var accounts = await accountService.GetAccountsByUser(personalNumber);
 
                 // Kontrollerar om användaren har några konton, annars avslutas metoden
                 if (!accounts.Any()) return;
@@ -220,7 +220,7 @@ namespace BankApp
         }
 
         // Metod för att visa transaktioner för ett specifikt konto
-        private void ShowTransactions(AccountService accountService, TransactionService transactionService, string personalNumber)
+        private async Task ShowTransactions(AccountService accountService, TransactionService transactionService, string personalNumber)
         {
             try
             {
@@ -228,7 +228,7 @@ namespace BankApp
                 Console.WriteLine("ISA Banken - Transaktioner");
 
                 // Hämta alla konton för användaren baserat på personnumret
-                var accounts = accountService.GetAccountsByUser(personalNumber);
+                var accounts = await accountService.GetAccountsByUser(personalNumber);
 
                 // Kontrollerar om användaren har några konton, annars avslutas metoden
                 if (!accounts.Any()) return;
@@ -238,7 +238,7 @@ namespace BankApp
                 if (selectedAccount == null) return; // Återgår till huvudmenyn om kontot är null
 
                 // Hämtar transaktioner för valt konto
-                var transactions = transactionService.GetTransactionsByAccount(selectedAccount.AccountNumber!);
+                var transactions = await transactionService.GetTransactionsByAccount(selectedAccount.AccountNumber!);
 
                 // Kontrollerar om det finns transaktioner för kontot
                 if (transactions == null || !transactions.Any())

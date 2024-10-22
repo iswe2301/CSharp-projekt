@@ -16,19 +16,19 @@ namespace BankApp
         }
 
         // Metod för att registrera ny användare
-        public User? RegisterNewUser(string personalNumber, string firstName, string lastName, string password)
+        public async Task<User?> RegisterNewUser(string personalNumber, string firstName, string lastName, string password)
         {
             try
             {
                 // Kontrollerar om användaren redan finns i databasen
-                var existingUser = usersCollection.Find(u => u.PersonalNumber == personalNumber).FirstOrDefault();
+                var existingUser = await usersCollection.Find(u => u.PersonalNumber == personalNumber).FirstOrDefaultAsync();
                 if (existingUser != null)
                 {
                     return null; // Returnerar null om användaren redan finns
                 }
 
                 var newUser = new User(personalNumber, firstName, lastName, password); // Skapar en ny användare
-                usersCollection.InsertOne(newUser); // Lägger till användaren i databasen
+                await usersCollection.InsertOneAsync(newUser); // Lägger till användaren i databasen
                 return newUser;
             }
             catch (MongoException ex) // Fångar upp eventuella fel
@@ -75,11 +75,11 @@ namespace BankApp
         }
 
         // Metod för att hämta en användare baserat på personnummer
-        public User? GetUserByPersonalNumber(string personalNumber)
+        public async Task<User?> GetUserByPersonalNumber(string personalNumber)
         {
             try
             {
-                return usersCollection.Find(u => u.PersonalNumber == personalNumber).FirstOrDefault(); // Hämtar användaren från databasen
+                return await usersCollection.Find(u => u.PersonalNumber == personalNumber).FirstOrDefaultAsync(); // Hämtar användaren från databasen
             }
             catch (MongoException ex) // Fångar upp eventuella fel
             {
