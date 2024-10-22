@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace BankApp
 {
@@ -7,6 +7,10 @@ namespace BankApp
     {
         static void Main(string[] args)
         {
+
+            // Sätter konsolens teckenkodning till Unicode för att kunna skriva ut ÅÄÖ korrekt i konsolen
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+            Console.InputEncoding = System.Text.Encoding.Unicode;
 
             var userService = new UserService(); // Skapar en instans av UserService
             var authService = new AuthService(userService); // Skapar en instans av AuthService, skickar med UserService
