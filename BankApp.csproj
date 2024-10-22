@@ -13,7 +13,7 @@
     <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup Label="LoanPredictModel">
-    <None Include="LoanPredictModel.mlnet">
+    <None Include="MLModels\LoanApproval\LoanPredictModel.mlnet">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
