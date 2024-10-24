@@ -34,7 +34,7 @@ Projektet är uppdelat i olika delar för att hålla koden organiserad och modul
 - **C# & .NET**: Huvudspråket och ramverket som används för hela applikationen.
 - **MongoDB**: Används för att spara användare, konton och transaktioner.
 - **ML.NET & Model Builder**: Används för att bygga och träna en maskininlärningsmodell för låneansökningsförutsägelse.
-- **DotNetEnv**: Används för att ladda miljövariabler från `.env`-filen som innehåller databaskonfiguration.
+- **DotNetEnv**: Används för att ladda miljövariabler från `.env`-filen som innehåller databaskonfiguration. I filen `.env example` finns instruktioner för hur applikationen kan konfigureras med en egen databasanslutning i en `.env`-fil.
 - **PasswordHasher**: Används för att hasha och verifiera användarlösenord.
 
 ## Om
