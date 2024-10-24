@@ -6,7 +6,7 @@ namespace BankApp
     public class MainMenu
     {
         // Metod för att visa huvudmenyn i inloggat läge
-        public async Task ShowMainMenu(AccountService accountService, TransactionService transactionService, User? user)
+        public async Task<bool> ShowMainMenu(AccountService accountService, TransactionService transactionService, User? user)
         {
             var loanService = new LoanService(); // Skapar en instans av LoanService
             while (true)
@@ -40,7 +40,7 @@ namespace BankApp
                         MakeLoanApplication(loanService); // Anropar metod för att göra en låneansökan
                         break;
                     case "7":
-                        return; // Avbryter och återgår till huvudmenyn för att logga in eller registrera en ny användare
+                        return false; // Avbryter och återgår till autentiseringsmenyn för att logga in eller registrera en ny användare
                     default:
                         Console.WriteLine("Ogiltigt val, försök igen."); // Felmeddelande vid ogiltigt val
                         System.Threading.Thread.Sleep(2000); // Väntar 2 sekunder så att användaren hinner läsa meddelandet
