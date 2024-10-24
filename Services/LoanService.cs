@@ -8,6 +8,13 @@ namespace BankApp
         // Metod för att förutsäga om ett lån kommer att bli beviljat
         public string PredictLoanApproval(float monthlyIncome, float monthlyExpenses, float loanAmount, string hasFixedIncome, string isEmployed, string hasCurrentLoan, string hasDebtIssues)
         {
+
+            // Kontrollerar om användaren har angett "ja" eller "nej" och sätter det till "Ja" eller "Nej" för att matcha ML-modellen (Stor bokstav i början)
+            hasFixedIncome = hasFixedIncome.Equals("ja", StringComparison.OrdinalIgnoreCase) ? "Ja" : "Nej";
+            isEmployed = isEmployed.Equals("ja", StringComparison.OrdinalIgnoreCase) ? "Ja" : "Nej";
+            hasCurrentLoan = hasCurrentLoan.Equals("ja", StringComparison.OrdinalIgnoreCase) ? "Ja" : "Nej";
+            hasDebtIssues = hasDebtIssues.Equals("ja", StringComparison.OrdinalIgnoreCase) ? "Ja" : "Nej";
+
             // Skapar en ny instans av ML-modellen och sätter datan till det som användaren har angett
             var input = new LoanPredictModel.ModelInput
             {
