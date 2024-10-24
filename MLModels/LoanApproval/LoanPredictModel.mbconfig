@@ -8,7 +8,7 @@
     "KeepPunctuations": false,
     "AllowQuoting": false,
     "Type": "TabularFile",
-    "FilePath": "C:\\Users\\IsaWestling\\OneDrive - SSG Standard Solutions Group AB\\Skrivbordet\\LoanData.txt",
+    "FilePath": "MLModels\\LoanApproval\\LoanData.txt",
     "Delimiter": ",",
     "DecimalMarker": ".",
     "HasHeader": true,
