@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
-using Microsoft.ML.Trainers.LightGbm;
+using Microsoft.ML.Trainers.FastTree;
 using Microsoft.ML.Transforms;
 
 namespace BankApp
@@ -17,10 +17,10 @@ namespace BankApp
     {
         public const string RetrainFilePath = @"MLModels\LoanApproval\LoanData.txt";
         public const char RetrainSeparatorChar = ',';
-        public const bool RetrainHasHeader = true;
-        public const bool RetrainAllowQuoting = false;
+        public const bool RetrainHasHeader =  true;
+        public const bool RetrainAllowQuoting =  false;
 
-        /// <summary>
+         /// <summary>
         /// Train a new model with the provided dataset.
         /// </summary>
         /// <param name="outputModelPath">File path for saving the model. Should be similar to "C:\YourPath\ModelName.mlnet"</param>
@@ -91,14 +91,14 @@ namespace BankApp
         public static IEstimator<ITransformer> BuildPipeline(MLContext mlContext)
         {
             // Data process configuration with pipeline data transformations
-            var pipeline = mlContext.Transforms.Categorical.OneHotEncoding(new[] { new InputOutputColumnPair(@"HasFixedIncome", @"HasFixedIncome"), new InputOutputColumnPair(@"IsEmployed", @"IsEmployed"), new InputOutputColumnPair(@"HasCurrentLoan", @"HasCurrentLoan"), new InputOutputColumnPair(@"HasDebtIssues", @"HasDebtIssues") }, outputKind: OneHotEncodingEstimator.OutputKind.Indicator)
-                                    .Append(mlContext.Transforms.ReplaceMissingValues(new[] { new InputOutputColumnPair(@"MonthlyIncome", @"MonthlyIncome"), new InputOutputColumnPair(@"MonthlyExpenses", @"MonthlyExpenses"), new InputOutputColumnPair(@"LoanAmount", @"LoanAmount") }))
-                                    .Append(mlContext.Transforms.Concatenate(@"Features", new[] { @"HasFixedIncome", @"IsEmployed", @"HasCurrentLoan", @"HasDebtIssues", @"MonthlyIncome", @"MonthlyExpenses", @"LoanAmount" }))
-                                    .Append(mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: @"LoanApproval", inputColumnName: @"LoanApproval", addKeyValueAnnotationsAsText: false))
-                                    .Append(mlContext.MulticlassClassification.Trainers.LightGbm(new LightGbmMulticlassTrainer.Options() { NumberOfLeaves = 880, NumberOfIterations = 4, MinimumExampleCountPerLeaf = 20, LearningRate = 0.678611043354218, LabelColumnName = @"LoanApproval", FeatureColumnName = @"Features", Booster = new GradientBooster.Options() { SubsampleFraction = 0.9993869250533868, FeatureFraction = 0.9897109153225483, L1Regularization = 2.2852012725867264E-10, L2Regularization = 0.7121370718040871 }, MaximumBinCountPerFeature = 280 }))
-                                    .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName: @"PredictedLabel", inputColumnName: @"PredictedLabel"));
+            var pipeline = mlContext.Transforms.Categorical.OneHotEncoding(new []{new InputOutputColumnPair(@"HasFixedIncome", @"HasFixedIncome"),new InputOutputColumnPair(@"IsEmployed", @"IsEmployed"),new InputOutputColumnPair(@"HasCurrentLoan", @"HasCurrentLoan"),new InputOutputColumnPair(@"HasDebtIssues", @"HasDebtIssues")}, outputKind: OneHotEncodingEstimator.OutputKind.Indicator)      
+                                    .Append(mlContext.Transforms.ReplaceMissingValues(new []{new InputOutputColumnPair(@"MonthlyIncome", @"MonthlyIncome"),new InputOutputColumnPair(@"MonthlyExpenses", @"MonthlyExpenses"),new InputOutputColumnPair(@"LoanAmount", @"LoanAmount")}))      
+                                    .Append(mlContext.Transforms.Concatenate(@"Features", new []{@"HasFixedIncome",@"IsEmployed",@"HasCurrentLoan",@"HasDebtIssues",@"MonthlyIncome",@"MonthlyExpenses",@"LoanAmount"}))      
+                                    .Append(mlContext.Transforms.Conversion.MapValueToKey(outputColumnName:@"LoanApproval",inputColumnName:@"LoanApproval",addKeyValueAnnotationsAsText:false))      
+                                    .Append(mlContext.MulticlassClassification.Trainers.OneVersusAll(binaryEstimator:mlContext.BinaryClassification.Trainers.FastTree(new FastTreeBinaryTrainer.Options(){NumberOfLeaves=4,MinimumExampleCountPerLeaf=17,NumberOfTrees=275,MaximumBinCountPerFeature=1023,FeatureFraction=0.9766070770321702,LearningRate=0.9999997766729865,LabelColumnName=@"LoanApproval",FeatureColumnName=@"Features",DiskTranspose=false}),labelColumnName: @"LoanApproval"))      
+                                    .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName:@"PredictedLabel",inputColumnName:@"PredictedLabel"));
 
             return pipeline;
         }
     }
-}
+ }

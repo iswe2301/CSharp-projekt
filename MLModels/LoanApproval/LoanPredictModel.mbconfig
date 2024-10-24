@@ -90,11 +90,11 @@
       {
         "Version": 1,
         "Type": "Trial",
-        "TrainerName": "LightGbmMulti",
-        "Score": 0.83141414141414138,
-        "RuntimeInSeconds": 0.239,
+        "TrainerName": "FastTreeOva",
+        "Score": 0.9738138528138528,
+        "RuntimeInSeconds": 1.103,
         "Parameter": {
-          "_SCHEMA_": "e0 * e1 * e2 * e3 * e6 * e11",
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4 * e11",
           "e0": {
             "OutputColumnNames": [
               "HasFixedIncome",
@@ -142,29 +142,27 @@
             "InputColumnName": "LoanApproval",
             "AddKeyValueAnnotationsAsText": false
           },
-          "e6": {
-            "NumberOfLeaves": 880,
-            "MinimumExampleCountPerLeaf": 20,
-            "LearningRate": 0.678611043354218,
-            "NumberOfTrees": 4,
-            "SubsampleFraction": 0.99938692505338678,
-            "MaximumBinCountPerFeature": 280,
-            "FeatureFraction": 0.98971091532254829,
-            "L1Regularization": 2.2852012725867264E-10,
-            "L2Regularization": 0.71213707180408714,
+          "e4": {
+            "NumberOfLeaves": 4,
+            "MinimumExampleCountPerLeaf": 17,
+            "NumberOfTrees": 275,
+            "MaximumBinCountPerFeature": 1023,
+            "FeatureFraction": 0.9766070770321702,
+            "LearningRate": 0.99999977667298645,
             "LabelColumnName": "LoanApproval",
-            "FeatureColumnName": "Features"
+            "FeatureColumnName": "Features",
+            "DiskTranspose": false
           }
         }
       },
       {
         "Version": 1,
         "Type": "Trial",
-        "TrainerName": "LightGbmMulti",
-        "Score": 0.83141414141414138,
-        "RuntimeInSeconds": 0.281,
+        "TrainerName": "FastTreeOva",
+        "Score": 0.969051948051948,
+        "RuntimeInSeconds": 2.321,
         "Parameter": {
-          "_SCHEMA_": "e0 * e1 * e2 * e3 * e6 * e11",
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4 * e11",
           "e0": {
             "OutputColumnNames": [
               "HasFixedIncome",
@@ -212,29 +210,27 @@
             "InputColumnName": "LoanApproval",
             "AddKeyValueAnnotationsAsText": false
           },
-          "e6": {
-            "NumberOfLeaves": 584,
-            "MinimumExampleCountPerLeaf": 20,
-            "LearningRate": 0.53685468869597963,
-            "NumberOfTrees": 4,
-            "SubsampleFraction": 0.99999977667298645,
-            "MaximumBinCountPerFeature": 290,
-            "FeatureFraction": 0.98612913476250741,
-            "L1Regularization": 2.2883987181941477E-10,
-            "L2Regularization": 0.6461763317203123,
+          "e4": {
+            "NumberOfLeaves": 4,
+            "MinimumExampleCountPerLeaf": 16,
+            "NumberOfTrees": 305,
+            "MaximumBinCountPerFeature": 814,
+            "FeatureFraction": 0.90546784699439775,
+            "LearningRate": 0.45238860281960136,
             "LabelColumnName": "LoanApproval",
-            "FeatureColumnName": "Features"
+            "FeatureColumnName": "Features",
+            "DiskTranspose": false
           }
         }
       },
       {
         "Version": 1,
         "Type": "Trial",
-        "TrainerName": "LightGbmMulti",
-        "Score": 0.83141414141414138,
-        "RuntimeInSeconds": 0.316,
+        "TrainerName": "FastTreeOva",
+        "Score": 0.96825829725829726,
+        "RuntimeInSeconds": 1.944,
         "Parameter": {
-          "_SCHEMA_": "e0 * e1 * e2 * e3 * e6 * e11",
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4 * e11",
           "e0": {
             "OutputColumnNames": [
               "HasFixedIncome",
@@ -282,29 +278,27 @@
             "InputColumnName": "LoanApproval",
             "AddKeyValueAnnotationsAsText": false
           },
-          "e6": {
-            "NumberOfLeaves": 717,
-            "MinimumExampleCountPerLeaf": 20,
-            "LearningRate": 0.74194854495689277,
-            "NumberOfTrees": 4,
-            "SubsampleFraction": 0.95667651506092766,
-            "MaximumBinCountPerFeature": 281,
-            "FeatureFraction": 0.98819660099446915,
-            "L1Regularization": 2.4111580324507721E-10,
-            "L2Regularization": 0.6732803492098659,
+          "e4": {
+            "NumberOfLeaves": 5,
+            "MinimumExampleCountPerLeaf": 8,
+            "NumberOfTrees": 119,
+            "MaximumBinCountPerFeature": 1023,
+            "FeatureFraction": 0.97465360404966506,
+            "LearningRate": 0.31123974620468525,
             "LabelColumnName": "LoanApproval",
-            "FeatureColumnName": "Features"
+            "FeatureColumnName": "Features",
+            "DiskTranspose": false
           }
         }
       },
       {
         "Version": 1,
         "Type": "Trial",
-        "TrainerName": "LightGbmMulti",
-        "Score": 0.83141414141414138,
-        "RuntimeInSeconds": 0.264,
+        "TrainerName": "FastTreeOva",
+        "Score": 0.96450649350649353,
+        "RuntimeInSeconds": 2.443,
         "Parameter": {
-          "_SCHEMA_": "e0 * e1 * e2 * e3 * e6 * e11",
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4 * e11",
           "e0": {
             "OutputColumnNames": [
               "HasFixedIncome",
@@ -352,29 +346,27 @@
             "InputColumnName": "LoanApproval",
             "AddKeyValueAnnotationsAsText": false
           },
-          "e6": {
-            "NumberOfLeaves": 1022,
-            "MinimumExampleCountPerLeaf": 20,
-            "LearningRate": 0.61608690043041936,
-            "NumberOfTrees": 4,
-            "SubsampleFraction": 0.97988295158832139,
-            "MaximumBinCountPerFeature": 273,
-            "FeatureFraction": 0.98833205095917664,
-            "L1Regularization": 2.3578712201399326E-10,
-            "L2Regularization": 0.75364462986112446,
+          "e4": {
+            "NumberOfLeaves": 5,
+            "MinimumExampleCountPerLeaf": 17,
+            "NumberOfTrees": 247,
+            "MaximumBinCountPerFeature": 1023,
+            "FeatureFraction": 0.99999999,
+            "LearningRate": 0.99999977667298645,
             "LabelColumnName": "LoanApproval",
-            "FeatureColumnName": "Features"
+            "FeatureColumnName": "Features",
+            "DiskTranspose": false
           }
         }
       },
       {
         "Version": 1,
         "Type": "Trial",
-        "TrainerName": "LightGbmMulti",
-        "Score": 0.83141414141414138,
-        "RuntimeInSeconds": 0.233,
+        "TrainerName": "FastTreeOva",
+        "Score": 0.95804004329004333,
+        "RuntimeInSeconds": 0.886,
         "Parameter": {
-          "_SCHEMA_": "e0 * e1 * e2 * e3 * e6 * e11",
+          "_SCHEMA_": "e0 * e1 * e2 * e3 * e4 * e11",
           "e0": {
             "OutputColumnNames": [
               "HasFixedIncome",
@@ -422,18 +414,16 @@
             "InputColumnName": "LoanApproval",
             "AddKeyValueAnnotationsAsText": false
           },
-          "e6": {
-            "NumberOfLeaves": 855,
-            "MinimumExampleCountPerLeaf": 20,
-            "LearningRate": 0.64874790426773588,
-            "NumberOfTrees": 4,
-            "SubsampleFraction": 0.99226631236028617,
-            "MaximumBinCountPerFeature": 280,
-            "FeatureFraction": 0.99129183660617171,
-            "L1Regularization": 2.1950351126670002E-10,
-            "L2Regularization": 0.69591018287848128,
+          "e4": {
+            "NumberOfLeaves": 4,
+            "MinimumExampleCountPerLeaf": 12,
+            "NumberOfTrees": 100,
+            "MaximumBinCountPerFeature": 876,
+            "FeatureFraction": 0.9994826886641468,
+            "LearningRate": 0.99999977667298645,
             "LabelColumnName": "LoanApproval",
-            "FeatureColumnName": "Features"
+            "FeatureColumnName": "Features",
+            "DiskTranspose": false
           }
         }
       }
