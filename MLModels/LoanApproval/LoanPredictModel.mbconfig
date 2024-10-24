@@ -454,7 +454,7 @@
     },
     "Schema": "e0 * e1 * e2 * e3 * (e4 + e5 + e6 + e7 + e8 + e9 + e10) * e11",
     "MetricName": "MacroAccuracy",
-    "ModelFilePath": "C:\\Users\\IsaWestling\\source\\repos\\CSharp-projekt\\LoanPredictModel.mlnet"
+    "ModelFilePath": "MLModels\\LoanApproval\\LoanPredictModel.mlnet"
   },
   "Type": "TrainingConfig",
   "Version": 5,

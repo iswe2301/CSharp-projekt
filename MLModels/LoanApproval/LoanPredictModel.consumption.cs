@@ -94,7 +94,7 @@ namespace BankApp
 
         #endregion
 
-        private static string MLNetModelPath = Path.GetFullPath("LoanPredictModel.mlnet");
+        private static string MLNetModelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MLModels", "LoanApproval", "LoanPredictModel.mlnet");
 
         public static readonly Lazy<PredictionEngine<ModelInput, ModelOutput>> PredictEngine = new Lazy<PredictionEngine<ModelInput, ModelOutput>>(() => CreatePredictEngine(), true);
 
