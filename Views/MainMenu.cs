@@ -253,8 +253,9 @@ namespace BankApp
 
                     // Loopar igenom transaktionerna och skriver ut dem
                     foreach (var transaction in transactions)
-                    {
-                        Console.WriteLine($"{transaction.Date} - {transaction.TransactionType}: {transaction.Amount:C}");
+                    {   // Konverterar transaktionsdatumet till lokal tid
+                        var localTime = transaction.Date.ToLocalTime();
+                        Console.WriteLine($"{localTime} - {transaction.TransactionType}: {transaction.Amount:C}");
                     }
                 }
 
